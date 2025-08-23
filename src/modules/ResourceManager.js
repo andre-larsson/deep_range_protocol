@@ -9,17 +9,38 @@ class ResourceManager {
   }
 
   dailyDecay() {
-    const foodConsumption = 5 + (this.crewMembers * 2);
-    this.resources.food = Math.max(0, this.resources.food - foodConsumption);
+    // Food consumption - reduced from 2 to 1.5 per crew member
+    const foodConsumption = 5 + (this.crewMembers * 1.5);
+    this.resources.food -= foodConsumption;
+    
+    // Handle starvation - crew member dies if food goes below 0
+    if (this.resources.food < 0) {
+      this.crewMembers = Math.max(0, this.crewMembers - 1);
+      this.resources.food = 0;
+      return { starvation: true };
+    }
     
     const moraleDecay = Math.max(2, 4 - Math.floor(this.crewMembers / 5));
-    this.resources.morale = Math.max(0, this.resources.morale - moraleDecay);
+    this.resources.morale -= moraleDecay;
+    
+    // Handle morale crisis - skip day with only costs if morale < 0
+    if (this.resources.morale < 0) {
+      this.resources.morale = 0;
+      return { moralecrisis: true };
+    }
     
     const energyConsumption = 6 + this.crewMembers;
     this.resources.energy = Math.max(0, this.resources.energy - energyConsumption);
+    
+    return {};
   }
 
   applyProduction(buildings) {
+    // Energy blackout - no production when energy is 0
+    if (this.resources.energy === 0) {
+      return { blackout: true };
+    }
+    
     const farmEfficiency = Math.min(1.0, this.crewMembers / 8);
     this.resources.food += Math.floor(buildings.hydroponicsFarm * 8 * farmEfficiency);
     
@@ -32,6 +53,8 @@ class ResourceManager {
     this.resources.food = Math.min(100, this.resources.food);
     this.resources.energy = Math.min(100, this.resources.energy);
     this.resources.morale = Math.min(100, this.resources.morale);
+    
+    return {};
   }
 
   canAfford(costs) {
@@ -58,7 +81,7 @@ class ResourceManager {
   }
 
   getNetChanges(buildings) {
-    const foodDecay = -(5 + (this.crewMembers * 2));
+    const foodDecay = -(5 + (this.crewMembers * 1.5));
     const moraleDecay = -Math.max(2, 4 - Math.floor(this.crewMembers / 5));
     const energyDecay = -(6 + this.crewMembers);
     

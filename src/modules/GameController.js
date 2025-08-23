@@ -129,8 +129,38 @@ class GameController {
   }
 
   nextDay() {
-    this.resourceManager.dailyDecay();
-    this.resourceManager.applyProduction(this.buildingManager.getAllBuildings());
+    const decayResult = this.resourceManager.dailyDecay();
+    
+    // Handle crisis situations
+    if (decayResult.starvation) {
+      this.eventManager.eventHistory.push({
+        day: this.day,
+        text: `💀 STARVATION: One crew member has died from lack of food. Survivors: ${this.resourceManager.crewMembers}`
+      });
+      this.eventManager.lastEvent = `💀 STARVATION: One crew member has died from lack of food!`;
+      this.eventManager.lastEventDay = this.day;
+    }
+    
+    if (decayResult.moralecrisis) {
+      this.eventManager.eventHistory.push({
+        day: this.day,
+        text: "😰 MORALE CRISIS: Crew refuses to work today due to low morale"
+      });
+      this.eventManager.lastEvent = `😰 MORALE CRISIS: Crew refuses to work today!`;
+      this.eventManager.lastEventDay = this.day;
+      // Skip production for morale crisis - crew won't work
+    } else {
+      const productionResult = this.resourceManager.applyProduction(this.buildingManager.getAllBuildings());
+      
+      if (productionResult.blackout) {
+        this.eventManager.eventHistory.push({
+          day: this.day,
+          text: "⚡ POWER BLACKOUT: No energy available - all systems offline"
+        });
+        this.eventManager.lastEvent = `⚡ POWER BLACKOUT: All systems offline!`;
+        this.eventManager.lastEventDay = this.day;
+      }
+    }
     
     this.eventManager.triggerRandomEvent(this.resourceManager, this.buildingManager, this.day);
     

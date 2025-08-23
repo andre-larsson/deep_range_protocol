@@ -3,7 +3,7 @@ const buildings = {
     name: 'Hydroponic Farm',
     symbol: '🌱',
     description: 'Produces food for the colony',
-    cost: { food: 15, energy: 25, morale: 10 },
+    cost: { food: 0, energy: 20, morale: 15 },
     production: { food: 8 },
     efficiencyRequirement: 8,
     unlocked: true
@@ -21,7 +21,7 @@ const buildings = {
     name: 'Recreation Center',
     symbol: '🏠',
     description: 'Improves crew morale and mental health',
-    cost: { food: 20, energy: 15, morale: 15 },
+    cost: { food: 25, energy: 20, morale: 0 },
     production: { morale: 5 },
     efficiencyRequirement: 4,
     unlocked: true

@@ -1,24 +1,35 @@
 {
-  "timestamp": "2025-08-23T17:30:51.596Z",
+  "timestamp": "2025-08-23T17:43:05.912Z",
   "version": "1.0.0",
   "gameState": {
-    "day": 1,
+    "day": 4,
     "resources": {
-      "food": 100,
-      "energy": 100,
-      "morale": 100
+      "food": 0,
+      "energy": 28,
+      "morale": 64
     },
     "crewMembers": 10,
     "buildings": {
-      "hydroponicsFarm": 0,
-      "solarPanels": 0,
+      "hydroponicsFarm": 2,
+      "solarPanels": 1,
       "recreationCenter": 0,
       "communicationArray": 0,
       "researchLab": 0,
       "shieldGenerator": 0,
       "expedition": 0
     },
-    "eventHistory": [],
+    "unlockedBuildings": [
+      "hydroponicsFarm",
+      "solarPanels",
+      "recreationCenter",
+      "communicationArray"
+    ],
+    "eventHistory": [
+      {
+        "day": 3,
+        "text": "Critical water filtration system failure!"
+      }
+    ],
     "cosmicInfluence": 0,
     "campaign": {
       "currentMission": 0,
@@ -28,9 +39,9 @@
       "missionActive": true
     },
     "currentEvent": {
-      "event": null,
+      "event": "📰 Critical water filtration system failure!",
       "extra": null,
-      "day": null,
+      "day": 3,
       "pending": null
     }
   }
