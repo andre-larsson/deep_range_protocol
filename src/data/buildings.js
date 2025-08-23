@@ -12,7 +12,7 @@ const buildings = {
     name: 'Solar Panel Array',
     symbol: '☀️',
     description: 'Generates energy from solar radiation',
-    cost: { food: 10, energy: 30, morale: 5 },
+    cost: { food: 15, energy: 0, morale: 10 },
     production: { energy: 12 },
     efficiencyRequirement: 6,
     unlocked: true
