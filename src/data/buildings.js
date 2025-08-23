@@ -55,16 +55,6 @@ const buildings = {
     efficiencyRequirement: null,
     unlocked: false,
     unlockedByMission: 2
-  },
-  expedition: {
-    name: 'Expedition',
-    symbol: '🚀',
-    description: 'Deep exploration mission - Required for final mission',
-    cost: { food: 50, energy: 120, morale: 60 },
-    production: {},
-    efficiencyRequirement: null,
-    unlocked: false,
-    unlockedByMission: 3
   }
 };
 

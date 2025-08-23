@@ -8,8 +8,7 @@ class BuildingManager {
       recreationCenter: 0,
       communicationArray: 0,
       researchLab: 0,
-      shieldGenerator: 0,
-      expedition: 0
+      shieldGenerator: 0
     };
     this.unlockedBuildings = new Set(['hydroponicsFarm', 'solarPanels', 'recreationCenter']);
   }

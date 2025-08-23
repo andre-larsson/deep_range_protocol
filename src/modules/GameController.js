@@ -57,12 +57,8 @@ class GameController {
       }
     }
 
-    // Check for true victory ending (crew sacrifice)
-    if (this.campaignManager.isTrueVictory()) {
-      this.displayManager.displayTrueVictory();
-    } else {
-      this.displayManager.displayGameOver(this.resourceManager, this.campaignManager, this.day);
-    }
+    // Display the appropriate game over screen
+    this.displayManager.displayGameOver(this.resourceManager, this.campaignManager, this.day);
     this.rl.close();
   }
 
@@ -112,9 +108,6 @@ class GameController {
       console.log(`\n✅ Successfully built ${building.name}!`);
       console.log('Construction takes one day to complete...');
       
-      if (buildingType === 'expedition') {
-        this.eventManager.triggerExpeditionEvent(this.resourceManager, this.day);
-      }
       
       console.log('Press Enter to continue...');
       await this.getUserInput();
@@ -193,6 +186,8 @@ class GameController {
         console.log(currentEvent.extra);
       }
       console.log('───────────────────────────────────────');
+      console.log('Press Enter to continue...');
+      await this.getUserInput();
     }
     
     if (!this.eventManager.getCurrentEvent().pending) {
@@ -220,10 +215,21 @@ class GameController {
     if (this.campaignManager.missionActive) {
       if (this.campaignManager.checkMissionCompletion(this.buildingManager)) {
         const mission = this.campaignManager.getCurrentMission();
+        
+        // Calculate early completion bonus
+        const timeLimit = this.campaignManager.timeLimit;
+        const daysRemaining = Math.max(0, timeLimit - this.day);
+        const speedBonus = Math.floor(daysRemaining * 5); // +5 morale per day early
+        const totalMoraleBonus = 30 + speedBonus;
+        
         this.displayManager.displayMissionComplete(mission);
         this.campaignManager.completeMission();
         
-        this.resourceManager.modifyResources({ morale: 30 });
+        this.resourceManager.modifyResources({ morale: totalMoraleBonus });
+        
+        if (speedBonus > 0) {
+          console.log(`🎉 EARLY COMPLETION BONUS: +${speedBonus} morale for finishing ${daysRemaining} days early!`);
+        }
         
         if (!this.campaignManager.isCampaignComplete()) {
           const nextMission = this.campaignManager.startCampaign();
@@ -341,6 +347,36 @@ class GameController {
   }
 
   async handleExpedition() {
+    // Check if this is the final mission expedition
+    if (this.campaignManager.currentMission === 3 && this.campaignManager.missionActive) {
+      if (this.campaignManager.canAffordFinalExpedition(this.resourceManager)) {
+        console.log('\n🚀 FINAL EXPEDITION AVAILABLE');
+        console.log('This expedition will complete the final mission.');
+        console.log('Cost: 50 food, 120 energy, 60 morale');
+        console.log('\n1. Launch final expedition');
+        console.log('2. Regular expedition');
+        console.log('3. Return to main menu');
+        
+        const finalChoice = await this.getUserInput();
+        if (finalChoice === '1') {
+          if (this.campaignManager.completeFinalExpedition(this.resourceManager)) {
+            console.log('\n🚀 Final expedition launched!');
+            console.log('Press Enter to continue...');
+            await this.getUserInput();
+            await this.nextDay();
+            return;
+          } else {
+            console.log('\n❌ Not enough resources for final expedition.');
+            await this.getUserInput();
+            return;
+          }
+        } else if (finalChoice === '3') {
+          return;
+        }
+        // Continue with regular expedition if choice was '2'
+      }
+    }
+
     this.displayManager.displayExpeditionMenu();
     const choice = await this.getUserInput();
     
@@ -361,7 +397,7 @@ class GameController {
         if (resource === 'crewLoss') return;
         if (this.resourceManager.resources.hasOwnProperty(resource)) {
           this.resourceManager.resources[resource] = Math.max(0, 
-            Math.min(100, this.resourceManager.resources[resource] + outcome.effects[resource])
+            Math.min(200, this.resourceManager.resources[resource] + outcome.effects[resource])
           );
         }
       });
@@ -563,7 +599,7 @@ class GameController {
     console.log('🍽️ Food supplies: 95/200 (emergency rations largely intact)');
     console.log('⚡ Energy reserves: 95/200 (backup power systems functioning)');
     console.log('😰 Crew morale: 90/200 (shaken but resilient and determined)');
-    console.log('👥 Survivors: 10/10 (all crew members accounted for)');
+    console.log('👥 Survivors: 5/5 (all crew members accounted for)');
     console.log('');
     console.log('🌱 REMAINING INFRASTRUCTURE:');
     console.log('• Three hydroponic farms (mysteriously undamaged)');
@@ -634,7 +670,16 @@ class GameController {
         return 'proceed';
       } else if (choice === '2') {
         console.log('\\nMaintaining protective barriers at all costs...');
-        console.log('The crew prepares for the worst as they send their final transmission.');
+        console.log('');
+        console.log('Dr. Martinez suddenly stops, her eyes wide with realization:');
+        console.log('"Wait... the equipment malfunctions, the whispers, the geometric patterns..."');
+        console.log('"This isn\'t random system failure - something is manipulating our technology!"');
+        console.log('');
+        console.log('Dr. Chen nods grimly: "The crystalline formations... they\'re not just energy sources.');
+        console.log('They\'re part of something vast and intelligent. We\'ve been deceived."');
+        console.log('');
+        console.log('Commander realizes the truth: "Earth needs to know. No more expeditions');
+        console.log('can come here. We have to send the warning, whatever the cost."');
         console.log('Press Enter to continue...');
         await this.getUserInput();
         return 'skip';

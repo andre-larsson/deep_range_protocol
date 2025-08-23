@@ -5,7 +5,7 @@ class ResourceManager {
       energy: 95,
       morale: 90
     };
-    this.crewMembers = 10;
+    this.crewMembers = 5;
   }
 
   checkMoraleBeforeProduction() {

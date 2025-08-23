@@ -33,6 +33,11 @@ class CampaignManager {
   checkMissionCompletion(buildingManager) {
     if (!this.missionActive) return false;
 
+    // Final mission has no building requirement
+    if (this.targetBuilding === null) {
+      return false; // Final mission completed through expedition action
+    }
+
     const currentCount = buildingManager.getBuildingCount(this.targetBuilding);
     return currentCount >= this.targetAmount;
   }
@@ -47,6 +52,23 @@ class CampaignManager {
       this.missionActive = false;
       this.currentMission++;
       return true;
+    }
+    return false;
+  }
+
+  canAffordFinalExpedition(resourceManager) {
+    if (this.currentMission !== 3) return false;
+    const mission = this.getCurrentMission();
+    return mission && resourceManager.canAfford(mission.costs);
+  }
+
+  completeFinalExpedition(resourceManager) {
+    if (this.currentMission === 3 && this.missionActive) {
+      const mission = this.getCurrentMission();
+      if (resourceManager.spend(mission.costs)) {
+        this.completeMission();
+        return true;
+      }
     }
     return false;
   }

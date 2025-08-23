@@ -28,7 +28,8 @@ class EventManager {
       
       this.eventHistory.push({
         day: day,
-        text: event.text
+        text: event.text,
+        effects: this.lastEventExtra
       });
       
       return true; // Event was triggered

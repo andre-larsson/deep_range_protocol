@@ -5,35 +5,35 @@ class ExpeditionManager {
 
   generateExpeditionOutcome(crewMembers, day) {
     const outcomes = [
-      // Positive outcomes (40% chance)
+      // Positive outcomes (30% chance)
       {
         type: 'resource_cache',
         chance: 0.15,
         message: '🎒 CACHE DISCOVERED: Your team found abandoned supply containers!',
-        effects: { food: 25, energy: 20, morale: 10 }
+        effects: { food: 40, energy: 35, morale: 15 }
       },
       {
         type: 'energy_crystals',
         chance: 0.10,
         message: '⚡ CRYSTAL FORMATION: Strange energy-emitting crystals discovered!',
-        effects: { energy: 40, morale: 5 },
+        effects: { energy: 60, morale: 10 },
         cosmic: true
       },
       {
         type: 'mineral_deposit',
         chance: 0.10,
         message: '⛏️ MINERAL WEALTH: Rich deposits found for trade or construction!',
-        effects: { food: 15, energy: 15, morale: 15 }
+        effects: { food: 25, energy: 25, morale: 20 }
       },
       {
         type: 'shelter_ruins',
         chance: 0.05,
         message: '🏛️ ANCIENT RUINS: Mysterious structures contain useful materials!',
-        effects: { food: 30, energy: 25, morale: -5 },
+        effects: { food: 45, energy: 40, morale: 0 },
         cosmic: true
       },
 
-      // Neutral outcomes (35% chance)
+      // Neutral outcomes (27% chance)
       {
         type: 'empty_handed',
         chance: 0.20,
@@ -54,7 +54,7 @@ class ExpeditionManager {
         effects: { morale: -3 }
       },
 
-      // Negative outcomes (25% chance)
+      // Negative outcomes (43% chance - includes 35% crew disappearance risk)
       {
         type: 'equipment_failure',
         chance: 0.10,
@@ -69,9 +69,23 @@ class ExpeditionManager {
       },
       {
         type: 'crew_lost',
-        chance: 0.05,
+        chance: 0.15,
         message: '💀 EXPEDITION TRAGEDY: A crew member went missing in the wilderness.',
-        effects: { crewLoss: 1, morale: -25 }
+        effects: { crewLoss: 1, morale: -15 }
+      },
+      {
+        type: 'crew_vanished',
+        chance: 0.10,
+        message: '👻 MYSTERIOUS DISAPPEARANCE: A team member walked into the crystal caves and never returned. Their equipment was found arranged in perfect geometric patterns.',
+        effects: { crewLoss: 1, morale: -12 },
+        cosmic: true
+      },
+      {
+        type: 'crew_taken',
+        chance: 0.08,
+        message: '🌀 THEY CALLED TO US: "The crystals sing so beautifully..." were the last words transmitted. One crew member is missing.',
+        effects: { crewLoss: 1, morale: -18 },
+        cosmic: true
       },
       {
         type: 'cosmic_encounter',

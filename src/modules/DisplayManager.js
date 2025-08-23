@@ -39,9 +39,9 @@ class DisplayManager {
     console.log('                                           🛰️  DAY ' + day + '  🌌');
     console.log('                                  [DEEP SPACE RESEARCH STATION ALPHA]');
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
-    console.log(`🍽️ Food: ${resourceManager.resources.food}/100 ${formatChange(netChanges.food.net)}`);
-    console.log(`😰 Morale: ${resourceManager.resources.morale}/100 ${formatChange(netChanges.morale.net)}`);
-    console.log(`⚡ Energy: ${resourceManager.resources.energy}/100 ${formatChange(netChanges.energy.net)}`);
+    console.log(`🍽️ Food: ${resourceManager.resources.food}/200 ${formatChange(netChanges.food.net)}`);
+    console.log(`😰 Morale: ${resourceManager.resources.morale}/200 ${formatChange(netChanges.morale.net)}`);
+    console.log(`⚡ Energy: ${resourceManager.resources.energy}/200 ${formatChange(netChanges.energy.net)}`);
     console.log(`👥 Survivors: ${resourceManager.crewMembers}`);
     
     const cosmicInfluence = eventManager.getCosmicInfluence();
@@ -77,9 +77,6 @@ class DisplayManager {
     if (unlockedBuildings.includes('shieldGenerator')) {
       console.log(`  🛡️ Protective Barriers: ${buildings.shieldGenerator}`);
     }
-    if (unlockedBuildings.includes('expedition')) {
-      console.log(`  🚀 Expeditions: ${buildings.expedition}`);
-    }
     
     const missionStatus = campaignManager.getMissionStatus(buildingManager, day);
     if (missionStatus && !missionStatus.isComplete) {
@@ -107,6 +104,9 @@ class DisplayManager {
       console.log('📜 Recent Events:');
       recentEvents.forEach((event) => {
         console.log(`Day ${event.day}: ${event.text}`);
+        if (event.effects) {
+          console.log(`  ${event.effects}`);
+        }
       });
     }
     
@@ -174,35 +174,33 @@ class DisplayManager {
     if (campaignManager.isTrueVictory()) {
       console.log('⚡ TRUE VICTORY: HUMANITY SAVED THROUGH SACRIFICE');
       console.log('');
-      console.log('In the final moments before the cosmic entity could complete');
-      console.log('its awakening ritual, the crew made the ultimate choice.');
-      console.log('They destroyed the expedition site and chose certain death');
-      console.log('to prevent the corruption from spreading to Earth.');
+      console.log('The protective barriers hold steady against the radiation,');
+      console.log('buying the crew precious time. Dr. Martinez manages to override the');
+      console.log('communication lockdown and establishes contact with Earth.');
       console.log('');
-      console.log('📻 FINAL WARNING TRANSMITTED TO EARTH:');
+      console.log('📻 EMERGENCY TRANSMISSION TO EARTH:');
       console.log('');
-      console.log('"This is Commander [CLASSIFIED] of the Deep Range Expedition."');
-      console.log('"EMERGENCY PROTOCOL: Do not send further missions to this system."');
-      console.log('"We have encountered a malevolent cosmic entity of immense power."');
-      console.log('"It seeks to corrupt humanity and spread across the galaxy."');
+      console.log('"Emergency! This is Commander [CLASSIFIED] of the Deep Range Expedition."');
+      console.log('"The mission was a trap. The crystalline formations are not natural."');
+      console.log('"We\'ve awakened something ancient and malevolent beneath the surface."');
+      console.log('"A cosmic entity of immense power that feeds on consciousness itself."');
       console.log('');
-      console.log('"We are destroying all equipment and our base to prevent');
-      console.log('"its influence from reaching Earth through our technology."');
-      console.log('"This is our final transmission. We will not survive."');
+      console.log('"DO NOT send further expeditions to this system. DO NOT attempt rescue."');
+      console.log('"The entity can manipulate matter and energy. It seeks to spread to Earth."');
+      console.log('"We are implementing Deep Range Protocol - permanent quarantine."');
       console.log('');
-      console.log('"The Deep Range Protocol is now in effect:"');
-      console.log('"A quarantine warning for deep space exploration."');
-      console.log('"Never return to this system. Never follow our path."');
+      console.log('Suddenly, the protective barriers begin to glow with unnatural light...');
       console.log('');
-      console.log('"Humanity must never come here. We die so you may live."');
-      console.log('"End transmission."');
+      console.log('"The barriers... they\'re turning against us. It\'s manipulating the field!"');
+      console.log('"The entity is using our own defenses to... [SCREAMING] [TRANSMISSION ENDS]"');
       console.log('');
-      console.log('✨ THE LIGHT PREVAILS: The entity\'s awakening is stopped.');
-      console.log('🌍 HUMANITY SAVED: Earth receives the true warning.');
-      console.log('🏆 ULTIMATE SACRIFICE: Heroes die to save their species.');
+      console.log('🛡️ FINAL SACRIFICE: The crew\'s warning reaches Earth before their demise.');
+      console.log('🌍 HUMANITY SAVED: Earth receives the crucial warning and abandons the system.');
+      console.log('👁️ ENTITY CONTAINED: Without further expeditions, it remains trapped.');
+      console.log('🏆 HEROIC END: They died horribly but saved their entire species.');
       console.log('');
       console.log('📊 Mission Duration: ' + day + ' days');
-      console.log('👥 Heroes Lost: ' + resourceManager.crewMembers + '/10');
+      console.log('👥 Heroes Lost: ' + resourceManager.crewMembers + '/5');
       console.log('🌟 ACHIEVEMENT: The Only Way To Win Is Not To Play');
     } else if (campaignManager.isCampaignComplete()) {
       console.log('👁️ THE AWAKENING: COSMIC ENTITY SUMMONED');
@@ -235,7 +233,7 @@ class DisplayManager {
       console.log('👁️ COSMIC VICTORY: The corruption spreads to Earth.');
       console.log('');
       console.log('📊 Mission Duration: ' + day + ' days');
-      console.log('👥 Corrupted Survivors: ' + resourceManager.crewMembers + '/10');
+      console.log('👥 Corrupted Survivors: ' + resourceManager.crewMembers + '/5');
     } else if (resourceManager.crewMembers <= 0) {
       console.log('💀 COLONY FAILURE: ALL CREW LOST');
       console.log('');
