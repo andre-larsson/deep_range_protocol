@@ -57,9 +57,9 @@ class ResourceManager {
     const moraleEfficiency = Math.min(1.0, this.crewMembers / 4);
     this.resources.morale += Math.floor(buildings.recreationCenter * 5 * moraleEfficiency);
     
-    this.resources.food = Math.min(100, this.resources.food);
-    this.resources.energy = Math.min(100, this.resources.energy);
-    this.resources.morale = Math.min(100, this.resources.morale);
+    this.resources.food = Math.min(200, this.resources.food);
+    this.resources.energy = Math.min(200, this.resources.energy);
+    this.resources.morale = Math.min(200, this.resources.morale);
     
     return {};
   }
@@ -81,9 +81,9 @@ class ResourceManager {
   }
 
   modifyResources(changes) {
-    if (changes.food) this.resources.food = Math.max(0, Math.min(100, this.resources.food + changes.food));
-    if (changes.energy) this.resources.energy = Math.max(0, Math.min(100, this.resources.energy + changes.energy));
-    if (changes.morale) this.resources.morale = Math.max(0, Math.min(100, this.resources.morale + changes.morale));
+    if (changes.food) this.resources.food = Math.max(0, Math.min(200, this.resources.food + changes.food));
+    if (changes.energy) this.resources.energy = Math.max(0, Math.min(200, this.resources.energy + changes.energy));
+    if (changes.morale) this.resources.morale = Math.max(0, Math.min(200, this.resources.morale + changes.morale));
     if (changes.crewMembers) this.crewMembers = Math.max(0, this.crewMembers + changes.crewMembers);
   }
 

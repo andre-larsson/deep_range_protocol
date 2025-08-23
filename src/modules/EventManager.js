@@ -17,8 +17,11 @@ class EventManager {
       
       this.lastEvent = `📰 ${event.text}`;
       this.lastEventDay = day;
+      
+      // Calculate effects before applying them
       this.lastEventExtra = this.calculateEventEffects(event, resourceManager);
       
+      // Apply the actual effect
       if (event.effect) {
         event.effect(resourceManager, buildingManager, this);
       }
@@ -27,7 +30,10 @@ class EventManager {
         day: day,
         text: event.text
       });
+      
+      return true; // Event was triggered
     }
+    return false; // No event triggered
   }
 
   triggerChoiceEvent(day) {

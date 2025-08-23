@@ -182,7 +182,18 @@ class GameController {
       this.eventManager.lastEventDay = this.day;
     }
     
-    this.eventManager.triggerRandomEvent(this.resourceManager, this.buildingManager, this.day);
+    const eventTriggered = this.eventManager.triggerRandomEvent(this.resourceManager, this.buildingManager, this.day);
+    
+    // Show random event immediately if one was triggered
+    if (eventTriggered) {
+      const currentEvent = this.eventManager.getCurrentEvent();
+      console.log('───────────────────────────────────────');
+      console.log(currentEvent.event);
+      if (currentEvent.extra) {
+        console.log(currentEvent.extra);
+      }
+      console.log('───────────────────────────────────────');
+    }
     
     if (!this.eventManager.getCurrentEvent().pending) {
       this.eventManager.triggerChoiceEvent(this.day);
@@ -549,9 +560,9 @@ class GameController {
     console.log('');
     console.log('📊 CURRENT STATUS - DAY 1 AFTER THE STORM');
     console.log('');
-    console.log('🍽️ Food supplies: 95/100 (emergency rations largely intact)');
-    console.log('⚡ Energy reserves: 95/100 (backup power systems functioning)');
-    console.log('😰 Crew morale: 90/100 (shaken but resilient and determined)');
+    console.log('🍽️ Food supplies: 95/200 (emergency rations largely intact)');
+    console.log('⚡ Energy reserves: 95/200 (backup power systems functioning)');
+    console.log('😰 Crew morale: 90/200 (shaken but resilient and determined)');
     console.log('👥 Survivors: 10/10 (all crew members accounted for)');
     console.log('');
     console.log('🌱 REMAINING INFRASTRUCTURE:');
@@ -577,50 +588,54 @@ class GameController {
   async presentFinalChoice(mission) {
     console.clear();
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
-    console.log('                                        👁️ THE FINAL CHOICE 👁️');
+    console.log('                                      ⚠️ SYSTEM CRITICAL FAILURE ⚠️');
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
     console.log('');
-    console.log('The crew has completed three successful missions, but something is wrong.');
-    console.log('The electromagnetic interference has grown stronger. Equipment operates');
-    console.log('on its own. Some crew members report strange dreams and whispers.');
+    console.log('🔴 EMERGENCY ALERT: PROTECTIVE BARRIER MALFUNCTION DETECTED');
     console.log('');
-    console.log('Dr. Chen\'s research notes from the previous mission contain a chilling');
-    console.log('discovery: the crystalline formations aren\'t natural. They\'re part of');
-    console.log('some vast, dormant neural network spanning the planet\'s core.');
+    console.log('The shield generators have begun resonating with the crystalline formations');
+    console.log('deep beneath the surface. Instead of protecting the base, they\'re creating');
+    console.log('a deadly feedback loop that\'s targeting the crew with lethal radiation.');
     console.log('');
-    console.log('The final mission calls for a deep expedition into the planet\'s heart,');
-    console.log('where the largest crystal formation waits. But Dr. Chen\'s final log');
-    console.log('entry warns: "It\'s not sleeping. It\'s waiting. Waiting for us to');
-    console.log('come deep enough to complete the circuit."');
+    console.log('Dr. Martinez reports from the control room: "The barriers are');
+    console.log('inverting! They\'re focusing energy inward instead of deflecting');
+    console.log('external threats. If we leave them active, the crew will die');
+    console.log('within hours from radiation exposure!"');
     console.log('');
-    console.log('⚠️ CRITICAL DECISION REQUIRED:');
+    console.log('However, shutting down the protective barriers will leave the base');
+    console.log('completely vulnerable to whatever phenomena exist on this planet.');
+    console.log('The electromagnetic interference, the strange readings...');
+    console.log('everything we\'ve been shielded from will pour in.');
     console.log('');
-    console.log('🚀 1. Complete the final expedition mission');
-    console.log('   → Follow protocol and investigate the deep formations');
-    console.log('   → High chance of establishing communication with Earth');
-    console.log('   → Unknown consequences from entity contact');
+    console.log('⚠️ CRITICAL SYSTEM DECISION REQUIRED:');
     console.log('');
-    console.log('💀 2. Abort the mission and destroy the base');
-    console.log('   → Sacrifice the crew to prevent entity awakening');
-    console.log('   → Send emergency warning to Earth before destruction');
-    console.log('   → Guarantee no survivors, but save humanity');
+    console.log('🔌 1. Shut down the protective barriers');
+    console.log('   → Save the crew from lethal radiation exposure');
+    console.log('   → Complete the mission and establish Earth communication');
+    console.log('   → Leave base vulnerable to external phenomena');
     console.log('');
-    console.log('The weight of humanity\'s future rests on your decision...');
+    console.log('⚡ 2. Keep the protective barriers active');
+    console.log('   → Maintain base defenses against external threats');
+    console.log('   → Accept crew casualties from radiation exposure');
+    console.log('   → Send final emergency transmission to Earth');
+    console.log('');
+    console.log('Time is running out. The radiation levels are climbing rapidly...');
     console.log('');
     console.log('Enter your choice (1 or 2):');
     
     while (true) {
       const choice = await this.getUserInput();
       if (choice === '1') {
-        console.log('\\nThe crew prepares for the final expedition...');
-        console.log('There is no turning back now.');
+        console.log('\\nInitiating protective barrier shutdown sequence...');
+        console.log('The crew breathes a sigh of relief as radiation levels drop.');
+        console.log('Now to complete the mission...');
         console.log('Press Enter to continue...');
         await this.getUserInput();
         return 'proceed';
       } else if (choice === '2') {
-        console.log('\\nThe crew makes the ultimate sacrifice...');
-        console.log('They begin destroying the base and transmitting the warning.');
-        console.log('Press Enter to witness their heroic end...');
+        console.log('\\nMaintaining protective barriers at all costs...');
+        console.log('The crew prepares for the worst as they send their final transmission.');
+        console.log('Press Enter to continue...');
         await this.getUserInput();
         return 'skip';
       } else {

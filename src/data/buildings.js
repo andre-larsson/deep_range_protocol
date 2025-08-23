@@ -60,7 +60,7 @@ const buildings = {
     name: 'Expedition',
     symbol: '🚀',
     description: 'Deep exploration mission - Required for final mission',
-    cost: { food: 20, energy: 30, morale: 35 },
+    cost: { food: 50, energy: 120, morale: 60 },
     production: {},
     efficiencyRequirement: null,
     unlocked: false,
