@@ -468,7 +468,7 @@ class GameController {
     console.log('• Communication array: GEOMETRICALLY CORRUPTED');
     console.log('• Supply depot: SCATTERED ACROSS SPACETIME');
     console.log('• Emergency shelter: PARTIALLY PHASED');
-    console.log('• Hydroponics bay: MYSTERIOUSLY UNTOUCHED');
+    console.log('• Hydroponics complex: ALL THREE FARMS UNTOUCHED');
     console.log('');
     console.log('Press Enter to continue...');
     await this.getUserInput();
@@ -486,15 +486,15 @@ class GameController {
     console.log('👥 Survivors: 10/10 (all crew members accounted for)');
     console.log('');
     console.log('🌱 REMAINING INFRASTRUCTURE:');
-    console.log('• One partially damaged hydroponic farm (your lifeline)');
+    console.log('• Three hydroponic farms (mysteriously undamaged)');
     console.log('• Scattered equipment and supplies');
     console.log('• No communication with Earth');
     console.log('');
     console.log('⚡ ANOMALOUS READINGS:');
     console.log('Since the gravitational event, instruments detect spacetime');
-    console.log('fluctuations with no known cause. The hydroponics bay shows');
+    console.log('fluctuations with no known cause. All three hydroponic farms show');
     console.log('perfect geometric alignment with subsurface crystalline formations.');
-    console.log('Something wanted that farm to survive. But what? And why?');
+    console.log('Something wanted these farms to survive. But what? And why?');
     console.log('');
     console.log('🎯 YOUR MISSION:');
     console.log('Survive long enough to reestablish communication with Earth');
