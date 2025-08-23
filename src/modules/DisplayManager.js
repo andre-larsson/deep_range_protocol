@@ -321,7 +321,6 @@ class DisplayManager {
     console.log('');
     console.log('                                   Enter your choice (1-3):');
     console.log('');
-    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
   }
 
   displayLoadGameMenu(saveFiles) {
