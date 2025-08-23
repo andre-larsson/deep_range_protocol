@@ -8,7 +8,15 @@ class ResourceManager {
     this.crewMembers = 10;
   }
 
-  dailyDecay() {
+  checkMoraleBeforeProduction() {
+    // Check if morale is too low for crew to work
+    if (this.resources.morale < 0) {
+      return { moralecrisis: true };
+    }
+    return {};
+  }
+
+  dailyDecay(day = 1) {
     // Food consumption - reduced from 2 to 1.5 per crew member
     const foodConsumption = 5 + (this.crewMembers * 1.5);
     this.resources.food -= foodConsumption;
@@ -20,14 +28,12 @@ class ResourceManager {
       return { starvation: true };
     }
     
-    const moraleDecay = Math.max(3, 6 - Math.floor(this.crewMembers / 4));
+    // Progressive morale decay - gets worse over time as isolation sets in
+    const baseMoraleDecay = Math.max(3, 6 - Math.floor(this.crewMembers / 4));
+    const timeStressFactor = Math.floor(day / 15); // +1 decay every 15 days
+    const moraleDecay = baseMoraleDecay + timeStressFactor;
     this.resources.morale -= moraleDecay;
-    
-    // Handle morale crisis - skip day with only costs if morale < 0
-    if (this.resources.morale < 0) {
-      this.resources.morale = 0;
-      return { moralecrisis: true };
-    }
+    this.resources.morale = Math.max(0, this.resources.morale);
     
     const energyConsumption = 6 + this.crewMembers;
     this.resources.energy = Math.max(0, this.resources.energy - energyConsumption);

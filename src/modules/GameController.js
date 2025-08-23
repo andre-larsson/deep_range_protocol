@@ -139,27 +139,19 @@ class GameController {
   }
 
   async nextDay() {
-    const decayResult = this.resourceManager.dailyDecay();
+    // First check if crew can work (morale check before production)
+    const preDecayResult = this.resourceManager.checkMoraleBeforeProduction();
     
-    // Handle crisis situations
-    if (decayResult.starvation) {
-      this.eventManager.eventHistory.push({
-        day: this.day,
-        text: `💀 STARVATION: One crew member has died from lack of food. Survivors: ${this.resourceManager.crewMembers}`
-      });
-      this.eventManager.lastEvent = `💀 STARVATION: One crew member has died from lack of food!`;
-      this.eventManager.lastEventDay = this.day;
-    }
-    
-    if (decayResult.moralecrisis) {
+    if (preDecayResult.moralecrisis) {
+      // Morale crisis - no production, only consumption
       this.eventManager.eventHistory.push({
         day: this.day,
         text: "😰 MORALE CRISIS: Crew refuses to work today due to low morale"
       });
       this.eventManager.lastEvent = `😰 MORALE CRISIS: Crew refuses to work today!`;
       this.eventManager.lastEventDay = this.day;
-      // Skip production for morale crisis - crew won't work
     } else {
+      // Apply production (crew works during the day)
       const productionResult = this.resourceManager.applyProduction(this.buildingManager.getAllBuildings());
       
       if (productionResult.blackout) {
@@ -170,6 +162,19 @@ class GameController {
         this.eventManager.lastEvent = `⚡ POWER BLACKOUT: All systems offline!`;
         this.eventManager.lastEventDay = this.day;
       }
+    }
+    
+    // Then apply daily consumption/decay
+    const decayResult = this.resourceManager.dailyDecay(this.day);
+    
+    // Handle crisis situations
+    if (decayResult.starvation) {
+      this.eventManager.eventHistory.push({
+        day: this.day,
+        text: `💀 STARVATION: One crew member has died from lack of food. Survivors: ${this.resourceManager.crewMembers}`
+      });
+      this.eventManager.lastEvent = `💀 STARVATION: One crew member has died from lack of food!`;
+      this.eventManager.lastEventDay = this.day;
     }
     
     this.eventManager.triggerRandomEvent(this.resourceManager, this.buildingManager, this.day);
@@ -225,6 +230,7 @@ class GameController {
             console.log(`${nextMission.story}`);
             console.log('\n✨ New building unlocked for this mission!');
             console.log('Press Enter to continue...');
+            await this.getUserInput();
           }
         }
       } else if (this.campaignManager.checkMissionFailure(this.day)) {
