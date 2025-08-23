@@ -101,11 +101,11 @@ class GameController {
 
     if (choiceIndex >= 0 && choiceIndex < unlockedBuildings.length) {
       const buildingType = unlockedBuildings[choiceIndex];
-      this.attemptBuild(buildingType);
+      await this.attemptBuild(buildingType);
     }
   }
 
-  attemptBuild(buildingType) {
+  async attemptBuild(buildingType) {
     const building = buildingData[buildingType];
     
     if (this.buildingManager.build(buildingType, this.resourceManager)) {
@@ -116,13 +116,18 @@ class GameController {
         this.eventManager.triggerExpeditionEvent(this.resourceManager, this.day);
       }
       
+      console.log('Press Enter to continue...');
+      await this.getUserInput();
+      
       // Building takes one day - advance the game
-      this.nextDay();
+      await this.nextDay();
     } else {
       console.log(`\n❌ Not enough resources to build ${building.name}.`);
+      const cost = this.buildingManager.getBuildingCost(buildingType);
+      console.log(`Required: 🍽️ ${cost.food} food, ⚡ ${cost.energy} energy, 😰 ${cost.morale} morale`);
+      console.log('Press Enter to continue...');
+      await this.getUserInput();
     }
-    
-    console.log('Press Enter to continue...');
   }
 
   async handleChoiceEvent(choice) {
@@ -238,7 +243,9 @@ class GameController {
         this.displayManager.displayMissionFailed(mission);
         this.campaignManager.failMission();
         
-        this.resourceManager.modifyResources({ morale: -40, energy: -20 });
+        // Mission failure ends the game
+        this.gameRunning = false;
+        return;
       }
     }
   }
@@ -541,9 +548,9 @@ class GameController {
     console.log('');
     console.log('📊 CURRENT STATUS - DAY 1 AFTER THE STORM');
     console.log('');
-    console.log('🍽️ Food supplies: 88/100 (storm damaged several storage units)');
-    console.log('⚡ Energy reserves: 92/100 (backup power cells partially drained)');
-    console.log('😰 Crew morale: 85/100 (shaken but determined to survive)');
+    console.log('🍽️ Food supplies: 95/100 (emergency rations largely intact)');
+    console.log('⚡ Energy reserves: 95/100 (backup power systems functioning)');
+    console.log('😰 Crew morale: 90/100 (shaken but resilient and determined)');
     console.log('👥 Survivors: 10/10 (all crew members accounted for)');
     console.log('');
     console.log('🌱 REMAINING INFRASTRUCTURE:');

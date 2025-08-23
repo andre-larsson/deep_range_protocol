@@ -1,9 +1,9 @@
 class ResourceManager {
   constructor() {
     this.resources = {
-      food: 88,
-      energy: 92,
-      morale: 85
+      food: 95,
+      energy: 95,
+      morale: 90
     };
     this.crewMembers = 10;
   }
@@ -17,8 +17,8 @@ class ResourceManager {
   }
 
   dailyDecay(day = 1) {
-    // Food consumption - reduced from 2 to 1.5 per crew member
-    const foodConsumption = 5 + (this.crewMembers * 1.5);
+    // Food consumption - slightly reduced for easier gameplay
+    const foodConsumption = 5 + (this.crewMembers * 1.2);
     this.resources.food -= foodConsumption;
     
     // Handle starvation - crew member dies if food goes below 0
@@ -28,14 +28,15 @@ class ResourceManager {
       return { starvation: true };
     }
     
-    // Progressive morale decay - gets worse over time as isolation sets in
-    const baseMoraleDecay = Math.max(3, 6 - Math.floor(this.crewMembers / 4));
-    const timeStressFactor = Math.floor(day / 15); // +1 decay every 15 days
+    // Progressive morale decay - slightly reduced and slower progression  
+    const baseMoraleDecay = Math.max(2, 5 - Math.floor(this.crewMembers / 4));
+    const timeStressFactor = Math.floor(day / 20); // +1 decay every 20 days instead of 15
     const moraleDecay = baseMoraleDecay + timeStressFactor;
     this.resources.morale -= moraleDecay;
     this.resources.morale = Math.max(0, this.resources.morale);
     
-    const energyConsumption = 6 + this.crewMembers;
+    // Slightly reduced energy consumption
+    const energyConsumption = 5 + this.crewMembers;
     this.resources.energy = Math.max(0, this.resources.energy - energyConsumption);
     
     return {};
