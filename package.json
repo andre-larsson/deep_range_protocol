@@ -1,0 +1,15 @@
+{
+  "name": "space-camp-manager",
+  "version": "1.0.0",
+  "description": "A text-based space colony management game",
+  "main": "space-camp-manager.js",
+  "scripts": {
+    "start": "node space-camp-manager.js"
+  },
+  "keywords": ["game", "text-based", "space", "colony", "management"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
