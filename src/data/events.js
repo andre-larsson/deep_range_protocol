@@ -25,6 +25,30 @@ const events = {
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: 28, energy: 10 }); }
     },
     {
+      text: "Successful atmospheric processing yields pure oxygen reserves!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ energy: 18, morale: 8 }); }
+    },
+    {
+      text: "Hydroponic breakthrough increases food production efficiency!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ food: 22, morale: 12 }); }
+    },
+    {
+      text: "Weather patterns bring beneficial mineral-rich rainfall!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ food: 15, energy: 8, morale: 5 }); }
+    },
+    {
+      text: "Equipment diagnostics reveal hidden efficiency gains!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ energy: 25, morale: 10 }); }
+    },
+    {
+      text: "Crew medical checkup shows everyone in excellent health!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ morale: 20, food: 5 }); }
+    },
+    {
+      text: "Favorable atmospheric conditions boost solar panel efficiency!",
+      effect: (resourceManager) => { resourceManager.modifyResources({ energy: 30, morale: 8 }); }
+    },
+    {
       text: "Ancient tome discovered, revealing forbidden knowledge.",
       effect: (resourceManager, buildingManager, eventManager) => { 
         resourceManager.modifyResources({ morale: 12, energy: 8 });
@@ -71,7 +95,7 @@ const events = {
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: -22 }); }
     },
     {
-      text: "Large native creature stalks the colony perimeter!",
+      text: "Aggressive algae overgrowth threatens colony systems!",
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: -25, energy: -10 }); }
     },
     {
@@ -210,16 +234,16 @@ const events = {
 
   choiceEvents: [
     {
-      text: "Native creature trapped in camp perimeter!",
-      description: "A large native creature has become entangled in our perimeter fence. We can spend energy to safely relocate it, or risk crew morale if we ignore it.",
+      text: "Perimeter fence overgrown by aggressive plant matter!",
+      description: "Rapidly growing algae and primitive plant matter has completely overrun sections of our perimeter fence. We can spend energy to clear it immediately, or risk reduced security if we leave it.",
       choices: [
         { 
-          text: "Spend 20 energy to safely relocate creature", 
+          text: "Spend 20 energy to clear overgrowth immediately", 
           cost: { energy: 20, food: 0, morale: 0 }, 
           effect: (resourceManager) => { resourceManager.modifyResources({ morale: 10 }); } 
         },
         { 
-          text: "Ignore it and hope it leaves", 
+          text: "Leave it and monitor the situation", 
           cost: { energy: 0, food: 0, morale: 0 }, 
           effect: (resourceManager) => { resourceManager.modifyResources({ morale: -15 }); } 
         }
