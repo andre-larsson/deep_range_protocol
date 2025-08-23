@@ -1,12 +1,12 @@
 {
-  "name": "space-camp-manager",
+  "name": "deep-range-protocol",
   "version": "1.0.0",
-  "description": "A text-based space colony management game",
-  "main": "space-camp-manager.js",
+  "description": "A cosmic horror text-based space colony survival game",
+  "main": "DeepRangeProtocol.js",
   "scripts": {
-    "start": "node space-camp-manager.js"
+    "start": "node DeepRangeProtocol.js"
   },
-  "keywords": ["game", "text-based", "space", "colony", "management"],
+  "keywords": ["game", "text-based", "space", "colony", "survival", "cosmic-horror", "sci-fi"],
   "author": "",
   "license": "MIT",
   "engines": {
