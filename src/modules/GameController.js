@@ -70,7 +70,7 @@ class GameController {
         await this.handleBuildMenu();
         break;
       case '2':
-        this.nextDay();
+        await this.nextDay();
         break;
       case '3':
         await this.handleSaveGame();
@@ -133,7 +133,7 @@ class GameController {
     await this.getUserInput();
   }
 
-  nextDay() {
+  async nextDay() {
     const decayResult = this.resourceManager.dailyDecay();
     
     // Handle crisis situations
@@ -174,7 +174,7 @@ class GameController {
     }
     
     if (this.gameMode === 'campaign') {
-      this.checkMissionStatus();
+      await this.checkMissionStatus();
     }
     
     this.day++;
@@ -189,7 +189,7 @@ class GameController {
     ), 'autosave');
   }
 
-  checkMissionStatus() {
+  async checkMissionStatus() {
     if (this.campaignManager.missionActive) {
       if (this.campaignManager.checkMissionCompletion(this.buildingManager)) {
         const mission = this.campaignManager.getCurrentMission();
