@@ -9,7 +9,7 @@ const events = {
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: 22 }); }
     },
     {
-      text: "Found intact alien technology!",
+      text: "Found intact technology of unknown origin!",
       effect: (resourceManager) => { resourceManager.modifyResources({ energy: 20, morale: 15 }); }
     },
     {
@@ -59,7 +59,7 @@ const events = {
       effect: (resourceManager) => { resourceManager.modifyResources({ energy: -25, morale: -18 }); }
     },
     {
-      text: "Alien virus spreads through colony!",
+      text: "Microscopic contamination spreads through colony!",
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: -25, energy: -12, food: -10 }); }
     },
     {
@@ -71,7 +71,7 @@ const events = {
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: -22 }); }
     },
     {
-      text: "Alien predator stalks the colony perimeter!",
+      text: "Large native creature stalks the colony perimeter!",
       effect: (resourceManager) => { resourceManager.modifyResources({ morale: -25, energy: -10 }); }
     },
     {
@@ -143,13 +143,75 @@ const events = {
         }
         resourceManager.modifyResources({ morale: -25, energy: -15 });
       }
+    },
+
+    // Story-hint events with no gameplay effects - subtle cosmic horror atmosphere
+    {
+      text: "Crew reports strange dreams featuring geometric patterns.",
+      effect: () => {} // No gameplay effect - pure atmosphere
+    },
+    {
+      text: "Microorganisms in petri dishes arrange themselves in perfect spirals.",
+      effect: () => {}
+    },
+    {
+      text: "Radio static occasionally resembles whispered conversations.",
+      effect: () => {}
+    },
+    {
+      text: "Algae samples exhibit synchronized pulsing with no apparent cause.",
+      effect: () => {}
+    },
+    {
+      text: "Equipment readings show impossible energy signatures underground.",
+      effect: () => {}
+    },
+    {
+      text: "Crew member reports seeing familiar faces in crystalline formations.",
+      effect: () => {}
+    },
+    {
+      text: "Simple bacteria cultures form intricate mandala-like colonies.",
+      effect: () => {}
+    },
+    {
+      text: "Magnetic compass needles point to subsurface anomalies instead of north.",
+      effect: () => {}
+    },
+    {
+      text: "Local microbes respond to crew presence with unexplained behavior changes.",
+      effect: () => {}
+    },
+    {
+      text: "Seismic readings detect rhythmic vibrations deep beneath the surface.",
+      effect: () => {}
+    },
+    {
+      text: "Crew awakens to find their drawings contain symbols they don't remember making.",
+      effect: () => {}
+    },
+    {
+      text: "Algae samples exhibit bioluminescence in response to specific frequencies.",
+      effect: () => {}
+    },
+    {
+      text: "Team member reports brief sensation of being observed during surface walks.",
+      effect: () => {}
+    },
+    {
+      text: "Ancient impact crater shows mineral formations that defy geological explanation.",
+      effect: () => {}
+    },
+    {
+      text: "Primitive organisms form temporary congregation patterns near the base.",
+      effect: () => {}
     }
   ],
 
   choiceEvents: [
     {
-      text: "Alien creature trapped in camp perimeter!",
-      description: "A large alien creature has become entangled in our perimeter fence. We can spend energy to safely relocate it, or risk crew morale if we ignore it.",
+      text: "Native creature trapped in camp perimeter!",
+      description: "A large native creature has become entangled in our perimeter fence. We can spend energy to safely relocate it, or risk crew morale if we ignore it.",
       choices: [
         { 
           text: "Spend 20 energy to safely relocate creature", 

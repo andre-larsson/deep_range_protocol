@@ -241,6 +241,7 @@ class GameController {
       } else if (this.campaignManager.checkMissionFailure(this.day)) {
         const mission = this.campaignManager.getCurrentMission();
         this.displayManager.displayMissionFailed(mission);
+        await this.getUserInput();
         this.campaignManager.failMission();
         
         // Mission failure ends the game

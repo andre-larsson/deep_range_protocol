@@ -287,11 +287,49 @@ class DisplayManager {
   }
 
   displayMissionFailed(mission) {
-    console.log('═══════════════════════════════════════');
-    console.log('❌ MISSION FAILED!');
-    console.log(`${mission.title}`);
-    console.log('Time has run out. The consequences are severe.');
-    console.log('═══════════════════════════════════════');
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                   💀 MISSION CRITICAL FAILURE 💀');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log(`📋 FAILED MISSION: ${mission.title}`);
+    console.log('');
+    console.log('⏰ TIME LIMIT EXCEEDED');
+    console.log('');
+    console.log('The mission parameters were not met within the allocated time frame.');
+    console.log('Without critical infrastructure in place, the expedition faces');
+    console.log('insurmountable challenges that seal their fate.');
+    console.log('');
+    console.log('📻 FINAL TRANSMISSION TO EARTH:');
+    console.log('');
+    console.log('"Mission Control, this is Deep Range Expedition Alpha."');
+    console.log('"We... we couldn\'t complete the objectives in time."');
+    console.log('"The equipment failures, the phenomena, the isolation..."');
+    console.log('"It was more than we could handle."');
+    console.log('');
+    console.log('"The planet... there\'s something wrong here."');
+    console.log('"Not with the life forms - they\'re simple enough."');
+    console.log('"But the very fabric of reality seems... thin."');
+    console.log('');
+    console.log('"We can hear whispers in the crystalline formations."');
+    console.log('"Geometric patterns appear in our dreams."');
+    console.log('"Some crew members have stopped speaking altogether."');
+    console.log('');
+    console.log('"Mission Control... do not send another expedition."');
+    console.log('"Mark this system as interdicted. For humanity\'s sake."');
+    console.log('');
+    console.log('"This is our final trans--"');
+    console.log('[SIGNAL LOST]');
+    console.log('');
+    console.log('💀 EXPEDITION STATUS: PRESUMED LOST');
+    console.log('🌌 DEEP RANGE PROTOCOL: SYSTEM QUARANTINED');
+    console.log('⚠️ WARNING: No further missions authorized to this sector');
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                      GAME OVER');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('Press Enter to return to main menu...');
   }
 
   displayStartScreen() {
