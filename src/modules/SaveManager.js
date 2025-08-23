@@ -121,7 +121,8 @@ class SaveManager {
         timeLimit: campaignManager.timeLimit,
         targetBuilding: campaignManager.targetBuilding,
         targetAmount: campaignManager.targetAmount,
-        missionActive: campaignManager.missionActive
+        missionActive: campaignManager.missionActive,
+        finalMissionSkipped: campaignManager.finalMissionSkipped
       },
       currentEvent: eventManager.getCurrentEvent()
     };
@@ -157,6 +158,7 @@ class SaveManager {
         campaignManager.targetBuilding = gameState.campaign.targetBuilding;
         campaignManager.targetAmount = gameState.campaign.targetAmount;
         campaignManager.missionActive = gameState.campaign.missionActive;
+        campaignManager.finalMissionSkipped = gameState.campaign.finalMissionSkipped || false;
       }
 
       return { success: true };

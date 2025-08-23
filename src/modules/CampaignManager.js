@@ -7,6 +7,7 @@ class CampaignManager {
     this.targetBuilding = '';
     this.targetAmount = 0;
     this.missionActive = false;
+    this.finalMissionSkipped = false;
     this.missions = campaignData.missions;
   }
 
@@ -81,6 +82,23 @@ class CampaignManager {
 
   isCampaignComplete() {
     return this.currentMission >= this.missions.length;
+  }
+
+  isFinalMission() {
+    return this.currentMission === this.missions.length - 1 && this.missionActive;
+  }
+
+  skipFinalMission() {
+    if (this.isFinalMission()) {
+      this.finalMissionSkipped = true;
+      this.missionActive = false;
+      return true;
+    }
+    return false;
+  }
+
+  isTrueVictory() {
+    return this.finalMissionSkipped;
   }
 
   getMissionStatus(buildingManager, day) {

@@ -55,7 +55,12 @@ class GameController {
       }
     }
 
-    this.displayManager.displayGameOver(this.resourceManager, this.campaignManager, this.day);
+    // Check for true victory ending (crew sacrifice)
+    if (this.campaignManager.isTrueVictory()) {
+      this.displayManager.displayTrueVictory();
+    } else {
+      this.displayManager.displayGameOver(this.resourceManager, this.campaignManager, this.day);
+    }
     this.rl.close();
   }
 
@@ -197,6 +202,18 @@ class GameController {
           const nextMission = this.campaignManager.startCampaign();
           if (nextMission) {
             this.buildingManager.unlockBuildingByMission(this.campaignManager.currentMission);
+            
+            // Check if this is the final mission - offer the ultimate choice
+            if (this.campaignManager.isFinalMission()) {
+              const choice = await this.presentFinalChoice(nextMission);
+              if (choice === 'skip') {
+                this.campaignManager.skipFinalMission();
+                // Force game over with true victory
+                this.gameRunning = false;
+                return;
+              }
+            }
+            
             console.log('\n📋 New mission briefing:');
             console.log(`${nextMission.title}`);
             console.log(`${nextMission.story}`);
@@ -484,6 +501,61 @@ class GameController {
     console.log('');
     console.log('Press Enter to begin the survival protocol...');
     await this.getUserInput();
+  }
+
+  async presentFinalChoice(mission) {
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                        👁️ THE FINAL CHOICE 👁️');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('The crew has completed three successful missions, but something is wrong.');
+    console.log('The electromagnetic interference has grown stronger. Equipment operates');
+    console.log('on its own. Some crew members report strange dreams and whispers.');
+    console.log('');
+    console.log('Dr. Chen\'s research notes from the previous mission contain a chilling');
+    console.log('discovery: the crystalline formations aren\'t natural. They\'re part of');
+    console.log('some vast, dormant neural network spanning the planet\'s core.');
+    console.log('');
+    console.log('The final mission calls for a deep expedition into the planet\'s heart,');
+    console.log('where the largest crystal formation waits. But Dr. Chen\'s final log');
+    console.log('entry warns: "It\'s not sleeping. It\'s waiting. Waiting for us to');
+    console.log('come deep enough to complete the circuit."');
+    console.log('');
+    console.log('⚠️ CRITICAL DECISION REQUIRED:');
+    console.log('');
+    console.log('🚀 1. Complete the final expedition mission');
+    console.log('   → Follow protocol and investigate the deep formations');
+    console.log('   → High chance of establishing communication with Earth');
+    console.log('   → Unknown consequences from entity contact');
+    console.log('');
+    console.log('💀 2. Abort the mission and destroy the base');
+    console.log('   → Sacrifice the crew to prevent entity awakening');
+    console.log('   → Send emergency warning to Earth before destruction');
+    console.log('   → Guarantee no survivors, but save humanity');
+    console.log('');
+    console.log('The weight of humanity\'s future rests on your decision...');
+    console.log('');
+    console.log('Enter your choice (1 or 2):');
+    
+    while (true) {
+      const choice = await this.getUserInput();
+      if (choice === '1') {
+        console.log('\\nThe crew prepares for the final expedition...');
+        console.log('There is no turning back now.');
+        console.log('Press Enter to continue...');
+        await this.getUserInput();
+        return 'proceed';
+      } else if (choice === '2') {
+        console.log('\\nThe crew makes the ultimate sacrifice...');
+        console.log('They begin destroying the base and transmitting the warning.');
+        console.log('Press Enter to witness their heroic end...');
+        await this.getUserInput();
+        return 'skip';
+      } else {
+        console.log('Please enter 1 or 2:');
+      }
+    }
   }
 }
 

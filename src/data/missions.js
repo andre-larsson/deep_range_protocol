@@ -25,8 +25,8 @@ const missions = {
       costs: { food: 50, energy: 75, morale: 40 }
     },
     {
-      title: "Deep Range Expedition",
-      story: "Command has gone silent for 73 days. Our last transmission spoke of 'fascinating discoveries' that I don't remember sending. Dr. Martinez insists we need to venture deeper into the crystal caves - she says the formations are calling to her. The crew that volunteered for the expedition... their eyes have changed. But we need to understand what we're dealing with. And we need those mineral samples, even if the idea of collecting them fills us with inexplicable dread.",
+      title: "Deep Range Protocol - Final Expedition",
+      story: "Command has gone silent for 73 days. Our last transmission spoke of 'fascinating discoveries' that I don't remember sending. Dr. Martinez insists we need to venture deeper into the crystal caves - she says the formations are calling to her. The crew that volunteered for the expedition... their eyes have changed. They speak in unison now, of 'completion' and 'awakening.' Dr. Chen's research notes contain warnings about a vast neural network beneath the planet's surface. Something that has been waiting. Something that needs us to come deeper. The mineral samples we've been collecting... they're not samples. They're invitations.",
       building: 'expedition',
       amount: 1,
       timeLimit: 10,
