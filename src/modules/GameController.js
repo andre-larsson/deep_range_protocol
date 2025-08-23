@@ -86,11 +86,11 @@ class GameController {
     this.displayManager.displayBuildMenu(this.resourceManager, this.buildingManager);
     
     const choice = await this.getUserInput();
-    const buildingTypes = Object.keys(buildingData);
+    const unlockedBuildings = this.buildingManager.getUnlockedBuildings();
     const choiceIndex = parseInt(choice) - 1;
 
-    if (choiceIndex >= 0 && choiceIndex < buildingTypes.length) {
-      const buildingType = buildingTypes[choiceIndex];
+    if (choiceIndex >= 0 && choiceIndex < unlockedBuildings.length) {
+      const buildingType = unlockedBuildings[choiceIndex];
       this.attemptBuild(buildingType);
     }
   }
@@ -162,9 +162,11 @@ class GameController {
         if (!this.campaignManager.isCampaignComplete()) {
           const nextMission = this.campaignManager.startCampaign();
           if (nextMission) {
+            this.buildingManager.unlockBuildingByMission(this.campaignManager.currentMission);
             console.log('\n📋 New mission briefing:');
             console.log(`${nextMission.title}`);
             console.log(`${nextMission.story}`);
+            console.log('\n✨ New building unlocked for this mission!');
             console.log('Press Enter to continue...');
           }
         }
@@ -320,6 +322,7 @@ class GameController {
     if (startChoice === 'new') {
       if (this.gameMode === 'campaign') {
         this.campaignManager.startCampaign();
+        this.buildingManager.unlockBuildingByMission(this.campaignManager.currentMission);
         const firstMission = this.campaignManager.getCurrentMission();
         if (firstMission) {
           console.clear();

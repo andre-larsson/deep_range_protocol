@@ -113,6 +113,7 @@ class SaveManager {
       resources: { ...resourceManager.resources },
       crewMembers: resourceManager.crewMembers,
       buildings: { ...buildingManager.getAllBuildings() },
+      unlockedBuildings: [...buildingManager.unlockedBuildings],
       eventHistory: [...eventManager.eventHistory],
       cosmicInfluence: eventManager.getCosmicInfluence(),
       campaign: {
@@ -134,6 +135,9 @@ class SaveManager {
 
       // Restore building manager state
       buildingManager.buildings = { ...gameState.buildings };
+      if (gameState.unlockedBuildings) {
+        buildingManager.unlockedBuildings = new Set(gameState.unlockedBuildings);
+      }
 
       // Restore event manager state
       eventManager.eventHistory = [...gameState.eventHistory];

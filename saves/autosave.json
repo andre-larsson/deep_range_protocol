@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-08-23T17:30:51.596Z",
+  "version": "1.0.0",
+  "gameState": {
+    "day": 1,
+    "resources": {
+      "food": 100,
+      "energy": 100,
+      "morale": 100
+    },
+    "crewMembers": 10,
+    "buildings": {
+      "hydroponicsFarm": 0,
+      "solarPanels": 0,
+      "recreationCenter": 0,
+      "communicationArray": 0,
+      "researchLab": 0,
+      "shieldGenerator": 0,
+      "expedition": 0
+    },
+    "eventHistory": [],
+    "cosmicInfluence": 0,
+    "campaign": {
+      "currentMission": 0,
+      "timeLimit": 12,
+      "targetBuilding": "communicationArray",
+      "targetAmount": 1,
+      "missionActive": true
+    },
+    "currentEvent": {
+      "event": null,
+      "extra": null,
+      "day": null,
+      "pending": null
+    }
+  }
+}

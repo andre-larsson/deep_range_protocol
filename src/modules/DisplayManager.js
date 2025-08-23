@@ -123,8 +123,8 @@ class DisplayManager {
   displayBuildMenu(resourceManager, buildingManager) {
     console.log('\nAvailable Structures:');
     
-    const buildingTypes = Object.keys(buildingData);
-    buildingTypes.forEach((buildingType, index) => {
+    const unlockedBuildings = buildingManager.getUnlockedBuildings();
+    unlockedBuildings.forEach((buildingType, index) => {
       const building = buildingData[buildingType];
       const cost = building.cost;
       const canAfford = resourceManager.canAfford(cost);
@@ -134,8 +134,8 @@ class DisplayManager {
       console.log(`   ${building.description}`);
     });
     
-    console.log(`${buildingTypes.length + 1}. Cancel`);
-    console.log(`\nEnter your choice (1-${buildingTypes.length + 1}):`);
+    console.log(`${unlockedBuildings.length + 1}. Cancel`);
+    console.log(`\nEnter your choice (1-${unlockedBuildings.length + 1}):`);
   }
 
   formatCost(cost) {

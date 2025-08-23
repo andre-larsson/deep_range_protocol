@@ -11,6 +11,7 @@ class BuildingManager {
       shieldGenerator: 0,
       expedition: 0
     };
+    this.unlockedBuildings = new Set(['hydroponicsFarm', 'solarPanels', 'recreationCenter']);
   }
 
   getBuildingCost(buildingType) {
@@ -21,14 +22,37 @@ class BuildingManager {
     return buildingData[buildingType] || null;
   }
 
+  isBuildingUnlocked(buildingType) {
+    return this.unlockedBuildings.has(buildingType);
+  }
+
+  unlockBuilding(buildingType) {
+    this.unlockedBuildings.add(buildingType);
+  }
+
+  unlockBuildingByMission(missionIndex) {
+    Object.keys(buildingData).forEach(buildingType => {
+      const building = buildingData[buildingType];
+      if (building.unlockedByMission === missionIndex) {
+        this.unlockBuilding(buildingType);
+      }
+    });
+  }
+
+  getUnlockedBuildings() {
+    return Object.keys(buildingData).filter(buildingType => 
+      this.isBuildingUnlocked(buildingType)
+    );
+  }
+
   canBuild(buildingType, resourceManager) {
     const cost = this.getBuildingCost(buildingType);
-    return cost && resourceManager.canAfford(cost);
+    return cost && this.isBuildingUnlocked(buildingType) && resourceManager.canAfford(cost);
   }
 
   build(buildingType, resourceManager) {
     const cost = this.getBuildingCost(buildingType);
-    if (cost && resourceManager.spend(cost)) {
+    if (cost && this.isBuildingUnlocked(buildingType) && resourceManager.spend(cost)) {
       this.buildings[buildingType]++;
       return true;
     }
