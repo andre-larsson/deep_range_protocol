@@ -41,7 +41,8 @@ class GameController {
       const menuType = this.displayManager.displayMenu(
         this.resourceManager,
         this.buildingManager,
-        this.eventManager
+        this.eventManager,
+        this.campaignManager
       );
 
       const choice = await this.getUserInput();
@@ -349,43 +350,75 @@ class GameController {
   async handleExpedition() {
     // Check if this is the final mission expedition
     if (this.campaignManager.currentMission === 3 && this.campaignManager.missionActive) {
-      if (this.campaignManager.canAffordFinalExpedition(this.resourceManager)) {
-        console.log('\n🚀 FINAL EXPEDITION AVAILABLE');
-        console.log('This expedition will complete the final mission.');
-        console.log('Cost: 50 food, 120 energy, 60 morale');
-        console.log('\n1. Launch final expedition');
-        console.log('2. Regular expedition');
-        console.log('3. Return to main menu');
-        
-        const finalChoice = await this.getUserInput();
-        if (finalChoice === '1') {
-          if (this.campaignManager.completeFinalExpedition(this.resourceManager)) {
-            console.log('\n🚀 Final expedition launched!');
-            console.log('Press Enter to continue...');
-            await this.getUserInput();
-            await this.nextDay();
-            return;
-          } else {
-            console.log('\n❌ Not enough resources for final expedition.');
-            await this.getUserInput();
-            return;
-          }
-        } else if (finalChoice === '3') {
+      const canAfford = this.campaignManager.canAffordFinalExpedition(this.resourceManager);
+      
+      console.log('\n🚀 FINAL EXPEDITION AVAILABLE');
+      console.log('This expedition will complete the final mission.');
+      console.log('Cost: 50 food, 120 energy, 60 morale');
+      
+      if (canAfford) {
+        console.log('✅ Resources available');
+      } else {
+        console.log('❌ Insufficient resources');
+      }
+      
+      console.log('\n1. Launch final expedition');
+      console.log('2. Regular expedition');
+      console.log('3. Return to main menu');
+      
+      const finalChoice = await this.getUserInput();
+      if (finalChoice === '1') {
+        if (this.campaignManager.completeFinalExpedition(this.resourceManager)) {
+          console.log('\n🚀 Final expedition launched!');
+          console.log('Press Enter to continue...');
+          await this.getUserInput();
+          await this.nextDay();
+          return;
+        } else {
+          console.log('\n❌ Not enough resources for final expedition.');
+          await this.getUserInput();
           return;
         }
-        // Continue with regular expedition if choice was '2'
+      } else if (finalChoice === '3') {
+        return;
       }
+      // Continue with regular expedition if choice was '2'
     }
 
     this.displayManager.displayExpeditionMenu();
     const choice = await this.getUserInput();
     
+    let teamSize = 0;
+    
     if (choice === '1') {
-      // Launch expedition
-      const outcome = this.expeditionManager.generateExpeditionOutcome(
-        this.resourceManager.crewMembers, 
-        this.day
-      );
+      teamSize = 1;
+    } else if (choice === '2') {
+      teamSize = 2;
+    } else if (choice === '3') {
+      teamSize = 3;
+    } else if (choice === '4') {
+      return; // Return to base
+    } else {
+      console.log('Invalid choice. Returning to base.');
+      await this.getUserInput();
+      return;
+    }
+    
+    // Check if enough crew available
+    if (teamSize > this.resourceManager.crewMembers) {
+      console.log(`\n❌ Not enough crew members! You need ${teamSize} but only have ${this.resourceManager.crewMembers}.`);
+      console.log('Press Enter to continue...');
+      await this.getUserInput();
+      return;
+    }
+    
+    // Launch expedition with selected team size
+    const outcome = this.expeditionManager.generateExpeditionOutcome(
+      this.resourceManager.crewMembers, 
+      this.day,
+      this.resourceManager.resources.morale,
+      teamSize
+    );
       
       // Apply effects
       if (outcome.effects.crewLoss) {
@@ -413,13 +446,11 @@ class GameController {
         text: `EXPEDITION: ${outcome.message}`
       });
       
-      this.displayManager.displayExpeditionOutcome(outcome, this.resourceManager);
+      this.displayManager.displayExpeditionOutcome(outcome, this.resourceManager, teamSize);
       await this.getUserInput();
       
       // Expedition takes time - advance day
       await this.nextDay();
-    }
-    // Choice '2' just returns to main menu
   }
 
   async showStartScreen() {
@@ -662,14 +693,16 @@ class GameController {
     while (true) {
       const choice = await this.getUserInput();
       if (choice === '1') {
-        console.log('\\nInitiating protective barrier shutdown sequence...');
+        console.log('\nInitiating protective barrier shutdown sequence...');
         console.log('The crew breathes a sigh of relief as radiation levels drop.');
-        console.log('Now to complete the mission...');
+        console.log('');
+        console.log('With the barriers down, the base is vulnerable, but the crew is safe.');
+        console.log('The final expedition can now proceed as planned.');
         console.log('Press Enter to continue...');
         await this.getUserInput();
         return 'proceed';
       } else if (choice === '2') {
-        console.log('\\nMaintaining protective barriers at all costs...');
+        console.log('\nMaintaining protective barriers at all costs...');
         console.log('');
         console.log('Dr. Martinez suddenly stops, her eyes wide with realization:');
         console.log('"Wait... the equipment malfunctions, the whispers, the geometric patterns..."');

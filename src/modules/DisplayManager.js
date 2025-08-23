@@ -83,7 +83,14 @@ class DisplayManager {
       console.log('───────────────────────────────────────');
       console.log(`🎯 MISSION: ${missionStatus.title}`);
       console.log(`Days Remaining: ${missionStatus.daysLeft}`);
-      console.log(`Target: Build ${missionStatus.progress.target} ${missionStatus.progress.building.replace(/([A-Z])/g, ' $1').toLowerCase().trim()}`);
+      
+      if (missionStatus.progress.isExpedition) {
+        console.log(`🚀 ACTION REQUIRED: Launch the final expedition via "Exploratory expedition"`);
+        console.log(`💰 Cost: 50 food, 120 energy, 60 morale`);
+      } else {
+        console.log(`Target: Build ${missionStatus.progress.target} ${missionStatus.progress.building.replace(/([A-Z])/g, ' $1').toLowerCase().trim()}`);
+      }
+      
       if (missionStatus.isUrgent) {
         console.log('⚠️  URGENT: Mission deadline approaching!');
       }
@@ -113,7 +120,7 @@ class DisplayManager {
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
   }
 
-  displayMenu(resourceManager, buildingManager, eventManager) {
+  displayMenu(resourceManager, buildingManager, eventManager, campaignManager) {
     const pendingEvent = eventManager.getCurrentEvent();
     
     if (pendingEvent.pending) {
@@ -129,7 +136,15 @@ class DisplayManager {
 
     console.log('\nWhat would you like to do?');
     console.log('1. Build structure');
-    console.log('2. 🗺️ Exploratory expedition');
+    
+    // Highlight expedition option for final mission
+    const isFinalMission = campaignManager && campaignManager.currentMission === 3 && campaignManager.missionActive;
+    if (isFinalMission) {
+      console.log('2. 🚀⭐ FINAL EXPEDITION READY ⭐🚀 (Complete the mission here!)');
+    } else {
+      console.log('2. 🗺️ Exploratory expedition');
+    }
+    
     console.log('3. Wait for next day');
     console.log('4. 💾 Save game');
     console.log('5. 📁 Load game');
@@ -420,19 +435,26 @@ class DisplayManager {
     console.log('• Salvageable equipment and supplies');
     console.log('• Scientific data (though some findings disturb the crew)');
     console.log('');
-    console.log('📊 SAFETY FACTOR: More crew members = safer expeditions');
+    console.log('📊 SAFETY FACTOR: Higher morale = safer expeditions');
+    console.log('💡 TEAM SIZE: Larger teams find more resources but risk more crew losses');
+    console.log('🔄 PARTIAL REWARDS: Lost crew may still bring back some resources');
+    console.log('🛡️ SAFETY NET: At least one crew member always returns from team expeditions');
     console.log('');
-    console.log('1. 🚀 Launch expedition');
-    console.log('2. 🔙 Return to base');
+    console.log('1. 🚀 Small team (1 crew) - Standard risk and reward');
+    console.log('2. 🚀🚀 Medium team (2 crew) - Much better rewards, moderate risk');
+    console.log('3. 🚀🚀🚀 Large team (3 crew) - Excellent rewards, higher risk');
+    console.log('4. 🔙 Return to base');
     console.log('');
-    console.log('Enter your choice (1-2):');
+    console.log('Enter your choice (1-4):');
   }
 
-  displayExpeditionOutcome(outcome, resourceManager) {
+  displayExpeditionOutcome(outcome, resourceManager, teamSize = 1) {
     console.clear();
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
     console.log('                                    📡 EXPEDITION REPORT 📡');
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log(`🚀 TEAM SIZE: ${teamSize} crew member${teamSize > 1 ? 's' : ''}`);
     console.log('');
     console.log(outcome.message);
     console.log('');
@@ -440,6 +462,13 @@ class DisplayManager {
     if (outcome.effects.crewLoss) {
       console.log(`💀 CREW LOST: ${outcome.effects.crewLoss} team member(s)`);
       console.log(`👥 Survivors remaining: ${resourceManager.crewMembers}`);
+      
+      if (outcome.partialRewards) {
+        console.log('');
+        console.log('📦 The lost crew members managed to gather some resources');
+        console.log('   before they disappeared. The survivors brought them back.');
+      }
+      
       console.log('');
     }
     

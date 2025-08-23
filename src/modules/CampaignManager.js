@@ -84,6 +84,17 @@ class CampaignManager {
   getMissionProgress(buildingManager) {
     if (!this.missionActive) return null;
 
+    // Special handling for final mission (expedition-based)
+    if (this.targetBuilding === null) {
+      return {
+        current: 0,
+        target: 1,
+        building: 'expedition',
+        completed: false,
+        isExpedition: true
+      };
+    }
+
     const currentCount = buildingManager.getBuildingCount(this.targetBuilding);
     return {
       current: currentCount,

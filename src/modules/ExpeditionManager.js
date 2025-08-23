@@ -3,7 +3,7 @@ class ExpeditionManager {
     this.expeditionHistory = [];
   }
 
-  generateExpeditionOutcome(crewMembers, day) {
+  generateExpeditionOutcome(crewMembers, day, morale = 100, teamSize = 1) {
     const outcomes = [
       // Positive outcomes (30% chance)
       {
@@ -97,23 +97,32 @@ class ExpeditionManager {
       }
     ];
 
-    // Adjust chances based on crew size (more crew = safer expeditions)
-    const safetyMultiplier = Math.min(1.5, crewMembers / 6);
-    const riskMultiplier = Math.max(0.5, 8 / crewMembers);
+    // Adjust chances based on morale (higher morale = safer expeditions)
+    const safetyMultiplier = Math.min(1.5, morale / 120); // 120 morale for max safety bonus
+    const riskMultiplier = Math.max(0.5, 80 / Math.max(morale, 20)); // Higher risk at low morale
+    
+    // Team size affects both risk and reward
+    const teamRewardMultiplier = 1 + (teamSize - 1) * 0.5; // +50% rewards per extra crew member
+    const teamRiskMultiplier = 1 + (teamSize - 1) * 0.2; // +20% crew loss risk per extra crew member
 
     // Select outcome based on weighted probabilities
     let totalChance = 0;
     const adjustedOutcomes = outcomes.map(outcome => {
       let adjustedChance = outcome.chance;
       
-      // Positive outcomes more likely with more crew
+      // Positive outcomes more likely with higher morale
       if (outcome.effects.food > 0 || outcome.effects.energy > 0) {
         adjustedChance *= safetyMultiplier;
       }
       
-      // Negative outcomes more likely with fewer crew
+      // Negative outcomes more likely with lower morale
       if (outcome.effects.crewLoss || outcome.effects.morale < -10) {
         adjustedChance *= riskMultiplier;
+      }
+      
+      // Team size affects crew loss risk
+      if (outcome.effects.crewLoss) {
+        adjustedChance *= teamRiskMultiplier;
       }
 
       totalChance += adjustedChance;
@@ -123,15 +132,58 @@ class ExpeditionManager {
     const roll = Math.random() * totalChance;
     const selectedOutcome = adjustedOutcomes.find(outcome => roll <= outcome.cumulativeChance) || adjustedOutcomes[0];
 
+    // Apply team size reward multiplier to resource gains
+    const scaledEffects = { ...selectedOutcome.effects };
+    if (scaledEffects.food && scaledEffects.food > 0) {
+      scaledEffects.food = Math.floor(scaledEffects.food * teamRewardMultiplier);
+    }
+    if (scaledEffects.energy && scaledEffects.energy > 0) {
+      scaledEffects.energy = Math.floor(scaledEffects.energy * teamRewardMultiplier);
+    }
+    if (scaledEffects.morale && scaledEffects.morale > 0) {
+      scaledEffects.morale = Math.floor(scaledEffects.morale * teamRewardMultiplier);
+    }
+    
+    // Larger teams can lose crew members but at least one always returns
+    if (scaledEffects.crewLoss && teamSize > 1) {
+      scaledEffects.crewLoss = Math.min(teamSize - 1, Math.max(1, Math.floor(scaledEffects.crewLoss * teamRiskMultiplier)));
+    }
+    
+    // If crew are lost from larger teams, provide partial rewards but reduce morale
+    let partialRewards = false;
+    if (scaledEffects.crewLoss && teamSize > 1) {
+      // Surviving team members still bring back some resources
+      const survivalRewardMultiplier = Math.max(0.3, (teamSize - scaledEffects.crewLoss) / teamSize);
+      
+      // Apply partial rewards if this was originally a negative outcome
+      if (scaledEffects.food <= 0 && scaledEffects.energy <= 0) {
+        // Give some resources that the lost crew found before disappearing
+        scaledEffects.food = Math.floor(15 * teamRewardMultiplier * survivalRewardMultiplier);
+        scaledEffects.energy = Math.floor(10 * teamRewardMultiplier * survivalRewardMultiplier);
+        partialRewards = true;
+      }
+      
+      // Additional morale penalty for losing team members
+      const moraleReduction = -Math.floor(10 * scaledEffects.crewLoss);
+      scaledEffects.morale = (scaledEffects.morale || 0) + moraleReduction;
+    }
+
+    const finalOutcome = {
+      ...selectedOutcome,
+      effects: scaledEffects,
+      partialRewards: partialRewards
+    };
+
     // Record expedition in history
     this.expeditionHistory.push({
       day: day,
-      outcome: selectedOutcome.type,
-      effects: selectedOutcome.effects,
-      cosmic: selectedOutcome.cosmic || false
+      outcome: finalOutcome.type,
+      effects: finalOutcome.effects,
+      cosmic: finalOutcome.cosmic || false,
+      teamSize: teamSize
     });
 
-    return selectedOutcome;
+    return finalOutcome;
   }
 
   getCosmicEncounters() {

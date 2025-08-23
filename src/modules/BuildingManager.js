@@ -76,9 +76,9 @@ class BuildingManager {
 
   getBuildingEfficiency(buildingType, crewMembers) {
     const efficiencyData = {
-      hydroponicsFarm: Math.min(1.0, crewMembers / 8),
-      solarPanels: Math.min(1.0, crewMembers / 6),
-      recreationCenter: Math.min(1.0, crewMembers / 4)
+      hydroponicsFarm: Math.min(1.0, crewMembers / 5),
+      solarPanels: Math.min(1.0, crewMembers / 5),
+      recreationCenter: Math.min(1.0, crewMembers / 5)
     };
     return efficiencyData[buildingType] || 1.0;
   }

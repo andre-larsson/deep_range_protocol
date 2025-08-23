@@ -48,13 +48,13 @@ class ResourceManager {
       return { blackout: true };
     }
     
-    const farmEfficiency = Math.min(1.0, this.crewMembers / 8);
+    const farmEfficiency = Math.min(1.0, this.crewMembers / 5);
     this.resources.food += Math.floor(buildings.hydroponicsFarm * 8 * farmEfficiency);
     
-    const energyEfficiency = Math.min(1.0, this.crewMembers / 6);
+    const energyEfficiency = Math.min(1.0, this.crewMembers / 5);
     this.resources.energy += Math.floor(buildings.solarPanels * 12 * energyEfficiency);
     
-    const moraleEfficiency = Math.min(1.0, this.crewMembers / 4);
+    const moraleEfficiency = Math.min(1.0, this.crewMembers / 5);
     this.resources.morale += Math.floor(buildings.recreationCenter * 5 * moraleEfficiency);
     
     this.resources.food = Math.min(200, this.resources.food);
@@ -92,9 +92,9 @@ class ResourceManager {
     const moraleDecay = -Math.max(2, 4 - Math.floor(this.crewMembers / 5));
     const energyDecay = -(6 + this.crewMembers);
     
-    const farmEfficiency = Math.min(1.0, this.crewMembers / 8);
-    const energyEfficiency = Math.min(1.0, this.crewMembers / 6);
-    const moraleEfficiency = Math.min(1.0, this.crewMembers / 4);
+    const farmEfficiency = Math.min(1.0, this.crewMembers / 5);
+    const energyEfficiency = Math.min(1.0, this.crewMembers / 5);
+    const moraleEfficiency = Math.min(1.0, this.crewMembers / 5);
     
     const foodProduction = Math.floor(buildings.hydroponicsFarm * 8 * farmEfficiency);
     const energyProduction = Math.floor(buildings.solarPanels * 12 * energyEfficiency);
