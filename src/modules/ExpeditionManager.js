@@ -48,9 +48,9 @@ class ExpeditionManager {
         cosmic: true
       },
       {
-        type: 'wildlife_encounter',
+        type: 'algae_encounter',
         chance: 0.05,
-        message: '🦎 NATIVE LIFE: Harmless but unsettling creatures observed.',
+        message: '🟢 ALGAE BLOOMS: Dense primitive algae formations block expedition paths.',
         effects: { morale: -3 }
       },
 

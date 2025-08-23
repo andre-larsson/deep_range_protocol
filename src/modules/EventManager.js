@@ -11,13 +11,13 @@ class EventManager {
   }
 
   triggerRandomEvent(resourceManager, buildingManager, day) {
-    if (Math.random() < 0.3) {
+    if (Math.random() < 0.6) {
       const events = eventData.randomEvents;
       const event = events[Math.floor(Math.random() * events.length)];
       
       this.lastEvent = `📰 ${event.text}`;
       this.lastEventDay = day;
-      this.lastEventExtra = null;
+      this.lastEventExtra = this.calculateEventEffects(event, resourceManager);
       
       if (event.effect) {
         event.effect(resourceManager, buildingManager, this);
@@ -121,6 +121,55 @@ class EventManager {
 
   getCosmicInfluence() {
     return this.cosmicInfluence;
+  }
+
+  calculateEventEffects(event, resourceManager) {
+    if (!event.effect) return null;
+    
+    // Capture resource state before effect
+    const beforeResources = { ...resourceManager.resources };
+    const beforeCrew = resourceManager.crewMembers;
+    
+    // Create a temporary copy to test the effect
+    const tempResourceManager = {
+      resources: { ...resourceManager.resources },
+      crewMembers: resourceManager.crewMembers,
+      modifyResources: (changes) => {
+        Object.keys(changes).forEach(key => {
+          if (key === 'crewMembers') {
+            tempResourceManager.crewMembers += changes[key];
+          } else if (tempResourceManager.resources.hasOwnProperty(key)) {
+            tempResourceManager.resources[key] += changes[key];
+          }
+        });
+      }
+    };
+    
+    try {
+      // Test the effect on the temporary manager
+      event.effect(tempResourceManager, null, { addCosmicInfluence: () => {} });
+      
+      // Calculate differences
+      const effects = [];
+      Object.keys(tempResourceManager.resources).forEach(key => {
+        const change = tempResourceManager.resources[key] - beforeResources[key];
+        if (change !== 0) {
+          const symbol = change > 0 ? '+' : '';
+          const icon = key === 'food' ? '🍽️' : key === 'energy' ? '⚡' : '😰';
+          effects.push(`${icon} ${symbol}${change} ${key}`);
+        }
+      });
+      
+      const crewChange = tempResourceManager.crewMembers - beforeCrew;
+      if (crewChange !== 0) {
+        const symbol = crewChange > 0 ? '+' : '';
+        effects.push(`👥 ${symbol}${crewChange} crew`);
+      }
+      
+      return effects.length > 0 ? `Effects: ${effects.join(', ')}` : null;
+    } catch (error) {
+      return null;
+    }
   }
 }
 
