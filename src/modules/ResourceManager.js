@@ -20,7 +20,7 @@ class ResourceManager {
       return { starvation: true };
     }
     
-    const moraleDecay = Math.max(2, 4 - Math.floor(this.crewMembers / 5));
+    const moraleDecay = Math.max(3, 6 - Math.floor(this.crewMembers / 4));
     this.resources.morale -= moraleDecay;
     
     // Handle morale crisis - skip day with only costs if morale < 0

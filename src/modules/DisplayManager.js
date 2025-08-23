@@ -129,11 +129,12 @@ class DisplayManager {
 
     console.log('\nWhat would you like to do?');
     console.log('1. Build structure');
-    console.log('2. Wait for next day');
-    console.log('3. 💾 Save game');
-    console.log('4. 📁 Load game');
-    console.log('5. Quit game');
-    console.log('\nEnter your choice (1-5):');
+    console.log('2. 🗺️ Exploratory expedition');
+    console.log('3. Wait for next day');
+    console.log('4. 💾 Save game');
+    console.log('5. 📁 Load game');
+    console.log('6. Quit game');
+    console.log('\nEnter your choice (1-6):');
     return 'menu';
   }
 
@@ -358,6 +359,79 @@ class DisplayManager {
 
   displaySaveLoadResult(result) {
     console.log('\n' + (result.success ? '✅' : '❌') + ' ' + result.message);
+    console.log('Press Enter to continue...');
+  }
+
+  displayExpeditionMenu() {
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                    🗺️ EXPLORATORY EXPEDITION 🗺️');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('The alien landscape stretches endlessly beyond your base perimeter.');
+    console.log('Strange formations dot the horizon, and your instruments detect');
+    console.log('anomalous readings in multiple directions.');
+    console.log('');
+    console.log('⚠️ EXPEDITION RISKS:');
+    console.log('• Team members may be injured or lost');
+    console.log('• Equipment could malfunction in hostile conditions');
+    console.log('• Unknown phenomena may affect crew morale');
+    console.log('• Something watches from the crystalline formations...');
+    console.log('');
+    console.log('🎯 POTENTIAL REWARDS:');
+    console.log('• Resource caches from previous expeditions');
+    console.log('• Mineral deposits and energy sources');
+    console.log('• Salvageable equipment and supplies');
+    console.log('• Scientific data (though some findings disturb the crew)');
+    console.log('');
+    console.log('📊 SAFETY FACTOR: More crew members = safer expeditions');
+    console.log('');
+    console.log('1. 🚀 Launch expedition');
+    console.log('2. 🔙 Return to base');
+    console.log('');
+    console.log('Enter your choice (1-2):');
+  }
+
+  displayExpeditionOutcome(outcome, resourceManager) {
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                    📡 EXPEDITION REPORT 📡');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log(outcome.message);
+    console.log('');
+    
+    if (outcome.effects.crewLoss) {
+      console.log(`💀 CREW LOST: ${outcome.effects.crewLoss} team member(s)`);
+      console.log(`👥 Survivors remaining: ${resourceManager.crewMembers}`);
+      console.log('');
+    }
+    
+    if (outcome.crewCorrupted) {
+      console.log('⚠️ The returning crew members seem... different.');
+      console.log('They speak in whispers about "beautiful geometries"');
+      console.log('and "the song beneath the surface."');
+      console.log('');
+    }
+
+    console.log('📊 RESOURCE CHANGES:');
+    Object.keys(outcome.effects).forEach(resource => {
+      if (resource === 'crewLoss') return;
+      const change = outcome.effects[resource];
+      if (change > 0) {
+        console.log(`  ${resource.toUpperCase()}: +${change}`);
+      } else if (change < 0) {
+        console.log(`  ${resource.toUpperCase()}: ${change}`);
+      }
+    });
+    
+    if (outcome.cosmic) {
+      console.log('');
+      console.log('⚠️ ANOMALOUS READINGS DETECTED');
+      console.log('This expedition has increased cosmic influence on the base...');
+    }
+    
+    console.log('');
     console.log('Press Enter to continue...');
   }
 }

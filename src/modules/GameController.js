@@ -4,6 +4,7 @@ const EventManager = require('./EventManager');
 const CampaignManager = require('./CampaignManager');
 const DisplayManager = require('./DisplayManager');
 const SaveManager = require('./SaveManager');
+const ExpeditionManager = require('./ExpeditionManager');
 const buildingData = require('../data/buildings');
 
 class GameController {
@@ -18,6 +19,7 @@ class GameController {
     this.campaignManager = new CampaignManager();
     this.displayManager = new DisplayManager();
     this.saveManager = new SaveManager();
+    this.expeditionManager = new ExpeditionManager();
     
     this.rl = this.displayManager.createInterface();
     
@@ -70,15 +72,18 @@ class GameController {
         await this.handleBuildMenu();
         break;
       case '2':
-        await this.nextDay();
+        await this.handleExpedition();
         break;
       case '3':
-        await this.handleSaveGame();
+        await this.nextDay();
         break;
       case '4':
-        await this.handleLoadGame();
+        await this.handleSaveGame();
         break;
       case '5':
+        await this.handleLoadGame();
+        break;
+      case '6':
         this.gameRunning = false;
         break;
       default:
@@ -185,6 +190,7 @@ class GameController {
       this.buildingManager,
       this.eventManager,
       this.campaignManager,
+      this.expeditionManager,
       this.day
     ), 'autosave');
   }
@@ -261,6 +267,7 @@ class GameController {
       this.buildingManager, 
       this.eventManager,
       this.campaignManager,
+      this.expeditionManager,
       this.day
     );
     
@@ -291,7 +298,8 @@ class GameController {
           this.resourceManager,
           this.buildingManager,
           this.eventManager,
-          this.campaignManager
+          this.campaignManager,
+          this.expeditionManager
         );
         
         if (importResult.success) {
@@ -305,6 +313,52 @@ class GameController {
       }
       await this.getUserInput();
     }
+  }
+
+  async handleExpedition() {
+    this.displayManager.displayExpeditionMenu();
+    const choice = await this.getUserInput();
+    
+    if (choice === '1') {
+      // Launch expedition
+      const outcome = this.expeditionManager.generateExpeditionOutcome(
+        this.resourceManager.crewMembers, 
+        this.day
+      );
+      
+      // Apply effects
+      if (outcome.effects.crewLoss) {
+        this.resourceManager.crewMembers = Math.max(0, this.resourceManager.crewMembers - outcome.effects.crewLoss);
+      }
+      
+      // Apply resource changes
+      Object.keys(outcome.effects).forEach(resource => {
+        if (resource === 'crewLoss') return;
+        if (this.resourceManager.resources.hasOwnProperty(resource)) {
+          this.resourceManager.resources[resource] = Math.max(0, 
+            Math.min(100, this.resourceManager.resources[resource] + outcome.effects[resource])
+          );
+        }
+      });
+      
+      // Increase cosmic influence for cosmic outcomes
+      if (outcome.cosmic) {
+        this.eventManager.cosmicInfluence += 5;
+      }
+      
+      // Add to event history
+      this.eventManager.eventHistory.push({
+        day: this.day,
+        text: `EXPEDITION: ${outcome.message}`
+      });
+      
+      this.displayManager.displayExpeditionOutcome(outcome, this.resourceManager);
+      await this.getUserInput();
+      
+      // Expedition takes time - advance day
+      await this.nextDay();
+    }
+    // Choice '2' just returns to main menu
   }
 
   async showStartScreen() {
@@ -393,6 +447,7 @@ class GameController {
       this.buildingManager,
       this.eventManager,
       this.campaignManager,
+      this.expeditionManager,
       this.day
     ), 'autosave');
     

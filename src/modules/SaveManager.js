@@ -107,7 +107,7 @@ class SaveManager {
     }
   }
 
-  exportGameState(resourceManager, buildingManager, eventManager, campaignManager, day) {
+  exportGameState(resourceManager, buildingManager, eventManager, campaignManager, expeditionManager, day) {
     return {
       day: day,
       resources: { ...resourceManager.resources },
@@ -124,11 +124,12 @@ class SaveManager {
         missionActive: campaignManager.missionActive,
         finalMissionSkipped: campaignManager.finalMissionSkipped
       },
-      currentEvent: eventManager.getCurrentEvent()
+      currentEvent: eventManager.getCurrentEvent(),
+      expeditionHistory: [...expeditionManager.expeditionHistory]
     };
   }
 
-  importGameState(gameState, resourceManager, buildingManager, eventManager, campaignManager) {
+  importGameState(gameState, resourceManager, buildingManager, eventManager, campaignManager, expeditionManager) {
     try {
       // Restore resource manager state
       resourceManager.resources = { ...gameState.resources };
@@ -159,6 +160,11 @@ class SaveManager {
         campaignManager.targetAmount = gameState.campaign.targetAmount;
         campaignManager.missionActive = gameState.campaign.missionActive;
         campaignManager.finalMissionSkipped = gameState.campaign.finalMissionSkipped || false;
+      }
+
+      // Restore expedition manager state
+      if (gameState.expeditionHistory && expeditionManager) {
+        expeditionManager.expeditionHistory = [...gameState.expeditionHistory];
       }
 
       return { success: true };
