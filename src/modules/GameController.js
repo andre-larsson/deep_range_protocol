@@ -3,6 +3,7 @@ const BuildingManager = require('./BuildingManager');
 const EventManager = require('./EventManager');
 const CampaignManager = require('./CampaignManager');
 const DisplayManager = require('./DisplayManager');
+const SaveManager = require('./SaveManager');
 const buildingData = require('../data/buildings');
 
 class GameController {
@@ -16,6 +17,7 @@ class GameController {
     this.eventManager = new EventManager();
     this.campaignManager = new CampaignManager();
     this.displayManager = new DisplayManager();
+    this.saveManager = new SaveManager();
     
     this.rl = this.displayManager.createInterface();
     
@@ -66,6 +68,12 @@ class GameController {
         this.nextDay();
         break;
       case '3':
+        await this.handleSaveGame();
+        break;
+      case '4':
+        await this.handleLoadGame();
+        break;
+      case '5':
         this.gameRunning = false;
         break;
       default:
@@ -131,6 +139,15 @@ class GameController {
     }
     
     this.day++;
+    
+    // Auto-save every day
+    this.saveManager.saveGame(this.saveManager.exportGameState(
+      this.resourceManager,
+      this.buildingManager,
+      this.eventManager,
+      this.campaignManager,
+      this.day
+    ), 'autosave');
   }
 
   checkMissionStatus() {
@@ -181,19 +198,149 @@ class GameController {
     });
   }
 
-  async startGame() {
-    console.log('Welcome to Deep Range Protocol!');
+  async handleSaveGame() {
+    this.displayManager.displaySaveGameMenu();
+    const saveName = await this.getUserInput();
+    const finalName = saveName.trim() || 'quicksave';
     
-    if (this.gameMode === 'campaign') {
-      const firstMission = this.campaignManager.getCurrentMission();
-      if (firstMission) {
-        console.log('\n📋 Mission Briefing:');
-        console.log(`${firstMission.title}`);
-        console.log(`${firstMission.story}`);
-        console.log('\nPress Enter to begin...');
-        await this.getUserInput();
+    const gameState = this.saveManager.exportGameState(
+      this.resourceManager,
+      this.buildingManager, 
+      this.eventManager,
+      this.campaignManager,
+      this.day
+    );
+    
+    const result = this.saveManager.saveGame(gameState, finalName);
+    this.displayManager.displaySaveLoadResult(result);
+    await this.getUserInput();
+  }
+
+  async handleLoadGame() {
+    const saveFiles = this.saveManager.getSaveFiles();
+    this.displayManager.displayLoadGameMenu(saveFiles);
+    
+    if (saveFiles.length === 0) {
+      await this.getUserInput();
+      return;
+    }
+    
+    const choice = await this.getUserInput();
+    const choiceIndex = parseInt(choice) - 1;
+    
+    if (choiceIndex >= 0 && choiceIndex < saveFiles.length) {
+      const saveFile = saveFiles[choiceIndex];
+      const result = this.saveManager.loadGame(saveFile.name);
+      
+      if (result.success) {
+        const importResult = this.saveManager.importGameState(
+          result.gameState,
+          this.resourceManager,
+          this.buildingManager,
+          this.eventManager,
+          this.campaignManager
+        );
+        
+        if (importResult.success) {
+          this.day = result.gameState.day;
+          this.displayManager.displaySaveLoadResult(result);
+        } else {
+          this.displayManager.displaySaveLoadResult(importResult);
+        }
+      } else {
+        this.displayManager.displaySaveLoadResult(result);
+      }
+      await this.getUserInput();
+    }
+  }
+
+  async showStartScreen() {
+    while (true) {
+      this.displayManager.displayStartScreen();
+      const choice = await this.getUserInput();
+      
+      switch (choice) {
+        case '1':
+          return 'new';
+        case '2':
+          const saveFiles = this.saveManager.getSaveFiles();
+          this.displayManager.displayLoadGameMenu(saveFiles);
+          
+          if (saveFiles.length === 0) {
+            await this.getUserInput();
+            continue;
+          }
+          
+          const loadChoice = await this.getUserInput();
+          const choiceIndex = parseInt(loadChoice) - 1;
+          
+          if (choiceIndex >= 0 && choiceIndex < saveFiles.length) {
+            const saveFile = saveFiles[choiceIndex];
+            const result = this.saveManager.loadGame(saveFile.name);
+            
+            if (result.success) {
+              const importResult = this.saveManager.importGameState(
+                result.gameState,
+                this.resourceManager,
+                this.buildingManager,
+                this.eventManager,
+                this.campaignManager
+              );
+              
+              if (importResult.success) {
+                this.day = result.gameState.day;
+                return 'loaded';
+              } else {
+                this.displayManager.displaySaveLoadResult(importResult);
+                await this.getUserInput();
+              }
+            } else {
+              this.displayManager.displaySaveLoadResult(result);
+              await this.getUserInput();
+            }
+          }
+          break;
+        case '3':
+          return 'exit';
+        default:
+          console.log('Invalid choice. Try again.');
       }
     }
+  }
+
+  async startGame() {
+    const startChoice = await this.showStartScreen();
+    
+    if (startChoice === 'exit') {
+      console.log('Thanks for playing!');
+      this.rl.close();
+      return;
+    }
+    
+    if (startChoice === 'new') {
+      if (this.gameMode === 'campaign') {
+        this.campaignManager.startCampaign();
+        const firstMission = this.campaignManager.getCurrentMission();
+        if (firstMission) {
+          console.clear();
+          console.log('Welcome to Deep Range Protocol!');
+          console.log('\n📋 Mission Briefing:');
+          console.log(`${firstMission.title}`);
+          console.log(`${firstMission.story}`);
+          console.log('\nPress Enter to begin...');
+          await this.getUserInput();
+        }
+      }
+    }
+    
+    // Auto-save at start of each day
+    this.saveManager.saveGame(this.saveManager.exportGameState(
+      this.resourceManager,
+      this.buildingManager,
+      this.eventManager,
+      this.campaignManager,
+      this.day
+    ), 'autosave');
     
     await this.gameLoop();
   }
