@@ -100,10 +100,14 @@ class GameController {
     
     if (this.buildingManager.build(buildingType, this.resourceManager)) {
       console.log(`\n✅ Successfully built ${building.name}!`);
+      console.log('Construction takes one day to complete...');
       
       if (buildingType === 'expedition') {
         this.eventManager.triggerExpeditionEvent(this.resourceManager, this.day);
       }
+      
+      // Building takes one day - advance the game
+      this.nextDay();
     } else {
       console.log(`\n❌ Not enough resources to build ${building.name}.`);
     }
