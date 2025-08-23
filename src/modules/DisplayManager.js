@@ -56,13 +56,30 @@ class DisplayManager {
     
     const buildings = buildingManager.getAllBuildings();
     const production = buildingManager.getTotalBuildingProduction(resourceManager.crewMembers);
+    const unlockedBuildings = buildingManager.getUnlockedBuildings();
     
-    console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${Math.round(buildingManager.getBuildingEfficiency('hydroponicsFarm', resourceManager.crewMembers)*100)}% efficient]`);
-    console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${Math.round(buildingManager.getBuildingEfficiency('solarPanels', resourceManager.crewMembers)*100)}% efficient]`);
-    console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [${Math.round(buildingManager.getBuildingEfficiency('recreationCenter', resourceManager.crewMembers)*100)}% efficient]`);
-    console.log(`  📡 Communication Arrays: ${buildings.communicationArray}`);
-    console.log(`  🔬 Research Labs: ${buildings.researchLab}`);
-    console.log(`  🛡️ Protective Barriers: ${buildings.shieldGenerator}`);
+    // Only show unlocked buildings
+    if (unlockedBuildings.includes('hydroponicsFarm')) {
+      console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${Math.round(buildingManager.getBuildingEfficiency('hydroponicsFarm', resourceManager.crewMembers)*100)}% efficient]`);
+    }
+    if (unlockedBuildings.includes('solarPanels')) {
+      console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${Math.round(buildingManager.getBuildingEfficiency('solarPanels', resourceManager.crewMembers)*100)}% efficient]`);
+    }
+    if (unlockedBuildings.includes('recreationCenter')) {
+      console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [${Math.round(buildingManager.getBuildingEfficiency('recreationCenter', resourceManager.crewMembers)*100)}% efficient]`);
+    }
+    if (unlockedBuildings.includes('communicationArray')) {
+      console.log(`  📡 Communication Arrays: ${buildings.communicationArray}`);
+    }
+    if (unlockedBuildings.includes('researchLab')) {
+      console.log(`  🔬 Research Labs: ${buildings.researchLab}`);
+    }
+    if (unlockedBuildings.includes('shieldGenerator')) {
+      console.log(`  🛡️ Protective Barriers: ${buildings.shieldGenerator}`);
+    }
+    if (unlockedBuildings.includes('expedition')) {
+      console.log(`  🚀 Expeditions: ${buildings.expedition}`);
+    }
     
     const missionStatus = campaignManager.getMissionStatus(buildingManager, day);
     if (missionStatus && !missionStatus.isComplete) {
