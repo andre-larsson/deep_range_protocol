@@ -165,24 +165,72 @@ class DisplayManager {
 
   displayGameOver(resourceManager, campaignManager, day) {
     console.clear();
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('                        GAME OVER');
-    console.log('═══════════════════════════════════════════════════════════════');
-    
-    if (resourceManager.crewMembers <= 0) {
-      console.log('All crew members have been lost. The colony has fallen.');
-    } else if (resourceManager.resources.food <= 0 && resourceManager.resources.energy <= 0 && resourceManager.resources.morale <= 0) {
-      console.log('All resources depleted. The colony could not survive.');
-    }
-    
-    console.log(`\nYou survived ${day} days.`);
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                     📡 FINAL TRANSMISSION 📡');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
     
     if (campaignManager.isCampaignComplete()) {
-      console.log('\n🎉 VICTORY! You completed all campaign missions!');
-      console.log('The mysteries of the deep range have been... understood.');
+      console.log('🎉 MISSION SUCCESS: DEEP RANGE PROTOCOL TRANSMITTED');
+      console.log('');
+      console.log('📻 FINAL MESSAGE TO EARTH:');
+      console.log('');
+      console.log('"This is Commander [CLASSIFIED] of the Deep Range Expedition."');
+      console.log('"We have successfully established communication after ' + day + ' days of survival."');
+      console.log('');
+      console.log('"WARNING: Do not send further expeditions to this system."');
+      console.log('"The phenomena we encountered are beyond current human understanding."');
+      console.log('"The planet appears habitable, but something ancient dwells here."');
+      console.log('');
+      console.log('"We are transmitting all research data and survival protocols."');
+      console.log('"This transmission represents humanity\'s first Deep Range Protocol:"');
+      console.log('"A warning from the deep range of space."');
+      console.log('');
+      console.log('"End transmission. Endeavor crew signing off."');
+      console.log('');
+      console.log('🌟 ACHIEVEMENT UNLOCKED: Deep Range Protocol Transmitted');
+      console.log('📊 Mission Duration: ' + day + ' days');
+      console.log('👥 Crew Survivors: ' + resourceManager.crewMembers + '/10');
+    } else if (resourceManager.crewMembers <= 0) {
+      console.log('💀 COLONY FAILURE: ALL CREW LOST');
+      console.log('');
+      console.log('📻 AUTOMATED DISTRESS BEACON (TRANSMITTED ' + day + ' DAYS POST-LANDING):');
+      console.log('');
+      console.log('"This is an automated message from Deep Range Expedition Base."');
+      console.log('"All crew members presumed deceased after ' + day + ' days."');
+      console.log('"Cause of failure: Complete colony breakdown."');
+      console.log('');
+      console.log('"WARNING TO EARTH: This planet is not suitable for colonization."');
+      console.log('"Something killed everyone. Do not come here."');
+      console.log('');
+      console.log('"This message constitutes humanity\'s first Deep Range Protocol:"');
+      console.log('"A warning from the deep range of space."');
+      console.log('');
+      console.log('"End automated transmission."');
+    } else {
+      console.log('💔 COLONY FAILURE: RESOURCES EXHAUSTED');
+      console.log('');
+      console.log('📻 FINAL DISTRESS CALL (TRANSMITTED DAY ' + day + '):');
+      console.log('');
+      console.log('"This is Commander [CLASSIFIED] of the Deep Range Expedition."');
+      console.log('"We are failing. ' + resourceManager.crewMembers + ' crew members remain alive."');
+      console.log('"But our resources are depleted. We cannot survive much longer."');
+      console.log('');
+      console.log('"WARNING TO EARTH: This planet is hostile to human life."');
+      console.log('"The storms, the interference, the inexplicable phenomena..."');
+      console.log('"Whatever is here does not want us here."');
+      console.log('');
+      console.log('"This may be humanity\'s first Deep Range Protocol:"');
+      console.log('"A warning from the deep range of space."');
+      console.log('');
+      console.log('"If anyone receives this... don\'t follow us."');
+      console.log('"End transmission."');
     }
     
-    console.log('\nThank you for playing Deep Range Protocol!');
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                          Thank you for playing Deep Range Protocol');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
   }
 
   displayMissionComplete(mission) {

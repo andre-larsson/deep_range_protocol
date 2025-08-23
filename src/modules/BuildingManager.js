@@ -3,7 +3,7 @@ const buildingData = require('../data/buildings');
 class BuildingManager {
   constructor() {
     this.buildings = {
-      hydroponicsFarm: 0,
+      hydroponicsFarm: 1,
       solarPanels: 0,
       recreationCenter: 0,
       communicationArray: 0,

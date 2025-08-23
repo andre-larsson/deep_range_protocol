@@ -1,8 +1,8 @@
 const missions = {
   missions: [
     {
-      title: "Deep Space Communication Protocol",
-      story: "Commander, we've detected structured transmissions from an unknown source beyond our galaxy. The signals appear to be using advanced compression algorithms that shouldn't exist. Our communications officer reported equipment malfunctions after the third attempt at decoding. We need to construct a high-powered Communication Array to properly analyze and respond to these transmissions before we lose this unprecedented contact opportunity.",
+      title: "Emergency Communication Restoration",
+      story: "Commander, our communication systems have been dead since the storm. But now crew members report strange electromagnetic interference patterns - equipment activating on its own, displays showing impossible readings, and radio static that almost sounds... structured. We desperately need to build a Communication Array to reestablish contact with Earth and investigate these phenomena before they drive the crew to madness.",
       building: 'communicationArray',
       amount: 1,
       timeLimit: 12,

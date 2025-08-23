@@ -355,16 +355,16 @@ class GameController {
     
     if (startChoice === 'new') {
       if (this.gameMode === 'campaign') {
+        await this.displayLoreIntroduction();
         this.campaignManager.startCampaign();
         this.buildingManager.unlockBuildingByMission(this.campaignManager.currentMission);
         const firstMission = this.campaignManager.getCurrentMission();
         if (firstMission) {
           console.clear();
-          console.log('Welcome to Deep Range Protocol!');
-          console.log('\n📋 Mission Briefing:');
+          console.log('📋 Current Status Report:');
           console.log(`${firstMission.title}`);
           console.log(`${firstMission.story}`);
-          console.log('\nPress Enter to begin...');
+          console.log('\nPress Enter to begin operations...');
           await this.getUserInput();
         }
       }
@@ -380,6 +380,110 @@ class GameController {
     ), 'autosave');
     
     await this.gameLoop();
+  }
+
+  async displayLoreIntroduction() {
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                          📡 MISSION LOG 📡');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('🌟 YEAR 2961 CE - EARTH ORBITAL STATION ALPHA');
+    console.log('');
+    console.log('After decades of deep space observation, humanity detected the impossible:');
+    console.log('strong biosignatures from Kepler-442b, 1,200 light-years distant.');
+    console.log('');
+    console.log('Atmospheric analysis revealed:');
+    console.log('• High oxygen content (21.3%)');
+    console.log('• Methane signatures indicating biological processes');  
+    console.log('• Perfect orbital position within the habitable zone');
+    console.log('• Host star age: 2.9 billion years (optimal for complex life)');
+    console.log('');
+    console.log('The greatest expedition in human history was launched.');
+    console.log('');
+    console.log('Press Enter to continue...');
+    await this.getUserInput();
+    
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                        🚀 THE JOURNEY 🚀');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('⏱️ SHIP TIME: 5 years, 7 months, 12 days');
+    console.log('⏱️ EARTH TIME: 203 years, 4 months, 3 days');
+    console.log('');
+    console.log('Traveling at 99.2% light speed aboard the starship "Endeavor,"');
+    console.log('you and your crew of 10 specialists endured the longest journey');
+    console.log('in human history. Time dilation meant that while Earth aged');
+    console.log('two centuries, you experienced only five years of subjective time.');
+    console.log('');
+    console.log('Upon arrival, initial scans confirmed the worst fears:');
+    console.log('The planet showed signs of early-stage life - microbial organisms,');
+    console.log('primitive algae, but no advanced civilizations.');
+    console.log('');
+    console.log('Still, this was humanity\'s first foothold beyond the solar system.');
+    console.log('');
+    console.log('Press Enter to continue...');
+    await this.getUserInput();
+    
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                      ⛈️ THE CATASTROPHE ⛈️');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('🏗️ DAY 1 - SURFACE OPERATIONS BEGIN');
+    console.log('');
+    console.log('Landing was successful. Your crew established a research base');
+    console.log('in the northern continent\'s temperate zone. Everything was');
+    console.log('proceeding according to protocol...');
+    console.log('');
+    console.log('🌪️ DAY 3 - ATMOSPHERIC ANOMALY DETECTED');
+    console.log('');
+    console.log('Without warning, a massive atmospheric storm system emerged');
+    console.log('from the planet\'s core. Unlike any weather pattern in Earth\'s');
+    console.log('meteorological records, it carried electromagnetic pulses');
+    console.log('that disabled most electronic systems.');
+    console.log('');
+    console.log('💥 THE STORM STRUCK WITH DEVASTATING FORCE:');
+    console.log('• Main habitat modules: DESTROYED');
+    console.log('• Communication array: OFFLINE');
+    console.log('• Supply depot: SCATTERED');
+    console.log('• Emergency shelter: DAMAGED');
+    console.log('• Hydroponics bay: PARTIALLY INTACT');
+    console.log('');
+    console.log('Press Enter to continue...');
+    await this.getUserInput();
+    
+    console.clear();
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('                                        🏴 SURVIVAL MODE 🏴');
+    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('📊 CURRENT STATUS - DAY 1 AFTER THE STORM');
+    console.log('');
+    console.log('🍽️ Food supplies: 88/100 (storm damaged several storage units)');
+    console.log('⚡ Energy reserves: 92/100 (backup power cells partially drained)');
+    console.log('😰 Crew morale: 85/100 (shaken but determined to survive)');
+    console.log('👥 Survivors: 10/10 (all crew members accounted for)');
+    console.log('');
+    console.log('🌱 REMAINING INFRASTRUCTURE:');
+    console.log('• One partially damaged hydroponic farm (your lifeline)');
+    console.log('• Scattered equipment and supplies');
+    console.log('• No communication with Earth');
+    console.log('');
+    console.log('⚡ STRANGE PHENOMENA:');
+    console.log('Ever since the storm, crew members have reported unexplainable');
+    console.log('occurrences: equipment malfunctioning in impossible ways,');
+    console.log('electromagnetic interference with no identifiable source,');
+    console.log('and an unsettling feeling that you\'re not alone on this world.');
+    console.log('');
+    console.log('🎯 YOUR MISSION:');
+    console.log('Survive long enough to reestablish communication with Earth');
+    console.log('and send back what may be humanity\'s final transmission');
+    console.log('from the deep range of space...');
+    console.log('');
+    console.log('Press Enter to begin the survival protocol...');
+    await this.getUserInput();
   }
 }
 

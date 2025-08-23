@@ -1,9 +1,9 @@
 class ResourceManager {
   constructor() {
     this.resources = {
-      food: 100,
-      energy: 100,
-      morale: 100
+      food: 88,
+      energy: 92,
+      morale: 85
     };
     this.crewMembers = 10;
   }
