@@ -10,26 +10,26 @@ class ExpeditionManager {
         type: 'resource_cache',
         chance: 0.15,
         message: '🎒 CACHE DISCOVERED: Your team found abandoned supply containers!',
-        effects: { food: 40, energy: 35, morale: 15 }
+        effects: { food: 30, energy: 25, morale: 10 }
       },
       {
         type: 'energy_crystals',
         chance: 0.10,
-        message: '⚡ CRYSTAL FORMATION: Strange energy-emitting crystals discovered!',
-        effects: { energy: 60, morale: 10 },
+        message: '⚡ RESONANT CRYSTALS: The team found crystals that hum with unfamiliar frequencies.',
+        effects: { energy: 25, morale: -2 },
         cosmic: true
       },
       {
         type: 'mineral_deposit',
         chance: 0.10,
         message: '⛏️ MINERAL WEALTH: Rich deposits found for trade or construction!',
-        effects: { food: 25, energy: 25, morale: 20 }
+        effects: { food: 20, energy: 20, morale: 15 }
       },
       {
         type: 'shelter_ruins',
         chance: 0.05,
-        message: '🏛️ ANCIENT RUINS: Mysterious structures contain useful materials!',
-        effects: { food: 45, energy: 40, morale: 0 },
+        message: '🏛️ GEOMETRIC RUINS: Ancient structures with impossible angles yield some materials.',
+        effects: { food: 20, energy: 15, morale: -3 },
         cosmic: true
       },
 
@@ -43,8 +43,8 @@ class ExpeditionManager {
       {
         type: 'strange_readings',
         chance: 0.10,
-        message: '📡 ANOMALOUS DATA: Equipment detected unexplainable phenomena...',
-        effects: { morale: -10 },
+        message: '📡 SIGNAL PATTERNS: The equipment records data that follows no known patterns.',
+        effects: { morale: -6 },
         cosmic: true
       },
       {
@@ -76,34 +76,88 @@ class ExpeditionManager {
       {
         type: 'crew_vanished',
         chance: 0.10,
-        message: '👻 MYSTERIOUS DISAPPEARANCE: A team member walked into the crystal caves and never returned. Their equipment was found arranged in perfect geometric patterns.',
+        message: '👻 LEFT BEHIND: A team member didn\'t return. Their equipment was found neatly arranged.',
         effects: { crewLoss: 1, morale: -12 },
         cosmic: true
       },
       {
         type: 'crew_taken',
         chance: 0.08,
-        message: '🌀 THEY CALLED TO US: "The crystals sing so beautifully..." were the last words transmitted. One crew member is missing.',
+        message: '🌀 DISTANT VOICES: "I can hear something beautiful..." was the last transmission. One crew member is missing.',
         effects: { crewLoss: 1, morale: -18 },
         cosmic: true
       },
       {
         type: 'cosmic_encounter',
         chance: 0.02,
-        message: '👁️ THEY ARE WATCHING: The team returns... changed. Their eyes reflect starlight.',
-        effects: { morale: -30, food: 10, energy: 10 },
+        message: '👁️ CHANGED PERSPECTIVE: The team returns quieter than usual. They avoid direct eye contact.',
+        effects: { morale: -25, food: 8, energy: 6 },
+        cosmic: true,
+        crewCorrupted: true
+      },
+      {
+        type: 'cosmic_whispers',
+        chance: 0.03,
+        message: '🌀 SHARED DREAMS: The team mentions having identical dreams during the expedition.',
+        effects: { morale: -15, energy: 10 },
+        cosmic: true
+      },
+      {
+        type: 'reality_distortion',
+        chance: 0.02,
+        message: '🌪️ TIME CONFUSION: The team insists the expedition lasted much longer than recorded.',
+        effects: { morale: -20, food: -8 },
+        cosmic: true
+      },
+      {
+        type: 'cosmic_gift',
+        chance: 0.01,
+        message: '✨ UNEXPECTED FINDS: The team returns with materials that shouldn\'t exist here.',
+        effects: { food: 25, energy: 20, morale: -8 },
+        cosmic: true
+      },
+      {
+        type: 'entity_influence',
+        chance: 0.02,
+        message: '🕳️ GROWING PRESENCE: The team mentions that something feels "closer" than before.',
+        effects: { morale: -12, food: 3 },
+        cosmic: true,
+        increasesCosmicRisk: true
+      },
+      {
+        type: 'dimensional_breach',
+        chance: 0.01,
+        message: '🌌 MOMENTARY ABSENCE: A team member briefly disappeared from instruments before returning confused.',
+        effects: { morale: -18, energy: 12 },
+        cosmic: true
+      },
+      {
+        type: 'mind_meld',
+        chance: 0.015,
+        message: '🧠 SYNCHRONIZED THOUGHTS: The team finishes each other\'s sentences more than usual.',
+        effects: { morale: -16, food: 8, energy: 6 },
         cosmic: true,
         crewCorrupted: true
       }
     ];
 
+    // Calculate cosmic escalation based on expedition history
+    const totalExpeditions = this.expeditionHistory.length;
+    const totalCrewSent = this.expeditionHistory.reduce((sum, exp) => sum + (exp.teamSize || 1), 0);
+    const cosmicEncounters = this.getCosmicEncounters();
+    
+    // Cosmic encounters become more likely after each expedition (50/50 after ~4 expeditions)
+    const baseCosmicMultiplier = Math.min(3.0, 1 + (totalExpeditions * 0.5) + (totalCrewSent * 0.2));
+    const cosmicEscalation = baseCosmicMultiplier * (1 + cosmicEncounters * 0.3);
+    
     // Adjust chances based on morale (higher morale = safer expeditions)
-    const safetyMultiplier = Math.min(1.5, morale / 120); // 120 morale for max safety bonus
-    const riskMultiplier = Math.max(0.5, 80 / Math.max(morale, 20)); // Higher risk at low morale
+    // High morale benefits are stronger to make solo expeditions more viable
+    const safetyMultiplier = Math.min(2.0, morale / 100); // 100 morale for max safety bonus (increased)
+    const riskMultiplier = Math.max(0.3, 60 / Math.max(morale, 15)); // Higher risk at low morale (stronger effect)
     
     // Team size affects both risk and reward
-    const teamRewardMultiplier = 1 + (teamSize - 1) * 0.5; // +50% rewards per extra crew member
-    const teamRiskMultiplier = 1 + (teamSize - 1) * 0.2; // +20% crew loss risk per extra crew member
+    const teamRewardMultiplier = 1 + (teamSize - 1) * 0.3; // +30% rewards per extra crew member
+    const teamRiskMultiplier = Math.max(0.5, 1 - (teamSize - 1) * 0.15); // -15% crew loss risk per extra crew member (minimum 50%)
 
     // Select outcome based on weighted probabilities
     let totalChance = 0;
@@ -124,6 +178,11 @@ class ExpeditionManager {
       if (outcome.effects.crewLoss) {
         adjustedChance *= teamRiskMultiplier;
       }
+      
+      // Apply cosmic escalation to all cosmic encounters
+      if (outcome.cosmic) {
+        adjustedChance *= cosmicEscalation;
+      }
 
       totalChance += adjustedChance;
       return { ...outcome, adjustedChance, cumulativeChance: totalChance };
@@ -137,6 +196,10 @@ class ExpeditionManager {
     if (scaledEffects.food && scaledEffects.food > 0) {
       scaledEffects.food = Math.floor(scaledEffects.food * teamRewardMultiplier);
     }
+    
+    // Apply expedition food cost based on team size AFTER scaling rewards
+    const expeditionFoodCost = teamSize * 3; // 3 food per crew member
+    scaledEffects.food = (scaledEffects.food || 0) - expeditionFoodCost;
     if (scaledEffects.energy && scaledEffects.energy > 0) {
       scaledEffects.energy = Math.floor(scaledEffects.energy * teamRewardMultiplier);
     }
@@ -164,7 +227,7 @@ class ExpeditionManager {
       }
       
       // Additional morale penalty for losing team members
-      const moraleReduction = -Math.floor(10 * scaledEffects.crewLoss);
+      const moraleReduction = -Math.floor(15 * scaledEffects.crewLoss);
       scaledEffects.morale = (scaledEffects.morale || 0) + moraleReduction;
     }
 

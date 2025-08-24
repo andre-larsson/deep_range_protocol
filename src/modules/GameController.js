@@ -126,13 +126,30 @@ class GameController {
 
   async handleChoiceEvent(choice) {
     const choiceIndex = parseInt(choice) - 1;
+    const choiceEvent = this.eventManager.pendingChoiceEvent;
     
-    if (choiceIndex >= 0 && choiceIndex <= 1) {
+    if (choiceIndex >= 0 && choiceIndex <= 1 && choiceEvent) {
+      const selectedChoice = choiceEvent.choices[choiceIndex];
+      console.log('');
+      console.log(`📊 CHOICE EFFECTS:`);
+      
+      // Show cost if any
+      if (selectedChoice.cost && (selectedChoice.cost.food > 0 || selectedChoice.cost.energy > 0 || selectedChoice.cost.morale > 0)) {
+        console.log(`💰 Cost: ${selectedChoice.cost.food > 0 ? `${selectedChoice.cost.food} food ` : ''}${selectedChoice.cost.energy > 0 ? `${selectedChoice.cost.energy} energy ` : ''}${selectedChoice.cost.morale > 0 ? `${selectedChoice.cost.morale} morale` : ''}`);
+      }
+      
       this.eventManager.handleChoice(choiceIndex, this.resourceManager, this.buildingManager, this.day);
+      
+      // Show the effect message if available
+      if (this.eventManager.lastEventExtra) {
+        console.log(`🎭 ${this.eventManager.lastEventExtra}`);
+      }
+      
     } else {
       this.eventManager.forceDefaultChoice(this.resourceManager, this.buildingManager, this.day);
     }
     
+    console.log('');
     console.log('Press Enter to continue...');
     await this.getUserInput();
   }
@@ -251,7 +268,13 @@ class GameController {
             console.log('\n📋 New mission briefing:');
             console.log(`${nextMission.title}`);
             console.log(`${nextMission.story}`);
-            console.log('\n✨ New building unlocked for this mission!');
+            
+            if (this.campaignManager.isFinalMission()) {
+              console.log('\n🚀 Final expedition unlocked! Access it via "Exploratory expedition"');
+            } else {
+              console.log('\n✨ New building unlocked for this mission!');
+            }
+            
             console.log('Press Enter to continue...');
             await this.getUserInput();
           }
@@ -287,6 +310,24 @@ class GameController {
         resolve(answer.trim());
       });
     });
+  }
+
+  wrapText(text, maxWidth) {
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+      if ((currentLine + word).length <= maxWidth) {
+        currentLine += (currentLine ? ' ' : '') + word;
+      } else {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
+      }
+    });
+
+    if (currentLine) lines.push(currentLine);
+    return lines;
   }
 
   async handleSaveGame() {
@@ -354,7 +395,7 @@ class GameController {
       
       console.log('\n🚀 FINAL EXPEDITION AVAILABLE');
       console.log('This expedition will complete the final mission.');
-      console.log('Cost: 50 food, 120 energy, 60 morale');
+      console.log('Cost: 100 food, 120 energy, 60 morale');
       
       if (canAfford) {
         console.log('✅ Resources available');
@@ -524,10 +565,28 @@ class GameController {
         const firstMission = this.campaignManager.getCurrentMission();
         if (firstMission) {
           console.clear();
-          console.log('📋 Current Status Report:');
-          console.log(`${firstMission.title}`);
-          console.log(`${firstMission.story}`);
-          console.log('\nPress Enter to begin operations...');
+          console.log('');
+          console.log('  ═══════════════════════════════════════════════════════════════════════════════════════════════════════');
+          console.log('');
+          console.log('                                    📋 MISSION BRIEFING 📋');
+          console.log('');
+          console.log('  ═══════════════════════════════════════════════════════════════════════════════════════════════════════');
+          console.log('');
+          console.log(`  🎯 ${firstMission.title}`);
+          console.log('');
+          console.log('  ───────────────────────────────────────────────────────────────────────────────────────────────────────');
+          console.log('');
+          
+          // Split the story into lines that fit within the display
+          const storyLines = this.wrapText(firstMission.story, 95);
+          storyLines.forEach(line => {
+            console.log(`  ${line}`);
+          });
+          
+          console.log('');
+          console.log('  ═══════════════════════════════════════════════════════════════════════════════════════════════════════');
+          console.log('');
+          console.log('                              Press Enter to begin operations...');
           await this.getUserInput();
         }
       }

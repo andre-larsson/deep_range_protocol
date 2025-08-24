@@ -277,12 +277,18 @@ const events = {
         { 
           text: "Organize celebration (15 food)", 
           cost: { food: 15, energy: 0, morale: 0 }, 
-          effect: (resourceManager) => { resourceManager.modifyResources({ morale: 20 }); } 
+          effect: (resourceManager, buildingManager, eventManager) => { 
+            resourceManager.modifyResources({ morale: 20 }); 
+            eventManager.lastEventExtra = "The celebration brings the crew together. Morale is restored (+20 morale).";
+          } 
         },
         { 
           text: "Let them handle it themselves", 
           cost: { food: 0, energy: 0, morale: 0 }, 
-          effect: (resourceManager) => { resourceManager.modifyResources({ morale: -12, energy: -8 }); } 
+          effect: (resourceManager, buildingManager, eventManager) => { 
+            resourceManager.modifyResources({ morale: -12, energy: -8 }); 
+            eventManager.lastEventExtra = "The conflict escalates without intervention. Crew morale and productivity suffer (-12 morale, -8 energy).";
+          } 
         }
       ]
     },
@@ -293,7 +299,10 @@ const events = {
         { 
           text: "Emergency treatment (20 food, 25 energy)", 
           cost: { food: 20, energy: 25, morale: 0 }, 
-          effect: (resourceManager) => { resourceManager.modifyResources({ morale: 15 }); }
+          effect: (resourceManager, buildingManager, eventManager) => { 
+            resourceManager.modifyResources({ morale: 15 }); 
+            eventManager.lastEventExtra = "The medical treatment succeeds! The crew member recovers fully (+15 morale).";
+          }
         },
         { 
           text: "Do what we can with basic supplies", 
@@ -301,7 +310,9 @@ const events = {
           effect: (resourceManager, buildingManager, eventManager) => { 
             if (Math.random() < 0.5) {
               resourceManager.modifyResources({ crewMembers: -1 });
-              eventManager.lastEventExtra = "We lost a crew member. The colony mourns.";
+              eventManager.lastEventExtra = "We lost a crew member. The colony mourns (-1 crew, -25 morale).";
+            } else {
+              eventManager.lastEventExtra = "The crew member survives with basic care, but morale suffers (-25 morale).";
             }
             resourceManager.modifyResources({ morale: -25 });
           }
@@ -318,7 +329,7 @@ const events = {
           effect: (resourceManager, buildingManager, eventManager) => { 
             resourceManager.modifyResources({ morale: 15, energy: 25 });
             eventManager.addCosmicInfluence(15);
-            eventManager.lastEventExtra = "The knowledge gained is... unsettling. Some truths are better left unknown.";
+            eventManager.lastEventExtra = "The knowledge gained is... unsettling. Some truths are better left unknown (+15 morale, +25 energy).";
           }
         },
         { 
@@ -326,7 +337,7 @@ const events = {
           cost: { food: 0, energy: 0, morale: 0 }, 
           effect: (resourceManager, buildingManager, eventManager) => { 
             resourceManager.modifyResources({ morale: -10 });
-            eventManager.lastEventExtra = "Some knowledge is too dangerous. The crew sleeps uneasily.";
+            eventManager.lastEventExtra = "Some knowledge is too dangerous. The crew sleeps uneasily (-10 morale).";
           }
         }
       ]

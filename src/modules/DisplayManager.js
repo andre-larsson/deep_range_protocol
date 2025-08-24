@@ -22,27 +22,32 @@ class DisplayManager {
     };
 
     console.clear();
-    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
-    console.log('    ██████╗ ███████╗███████╗██████╗     ██████╗  █████╗ ███╗   ██╗ ██████╗ ███████╗');
-    console.log('    ██╔══██╗██╔════╝██╔════╝██╔══██╗    ██╔══██╗██╔══██╗████╗  ██║██╔════╝ ██╔════╝');
-    console.log('    ██║  ██║█████╗  █████╗  ██████╔╝    ██████╔╝███████║██╔██╗ ██║██║  ███╗█████╗  ');
-    console.log('    ██║  ██║██╔══╝  ██╔══╝  ██╔═══╝     ██╔══██╗██╔══██║██║╚██╗██║██║   ██║██╔══╝  ');
-    console.log('    ██████╔╝███████╗███████╗██║         ██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗');
-    console.log('    ╚═════╝ ╚══════╝╚══════╝╚═╝         ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝');
-    console.log('                          ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗     ');
-    console.log('                          ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║     ');
-    console.log('                          ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║     ');
-    console.log('                          ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║     ');
-    console.log('                          ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗');
-    console.log('                          ╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝');
     console.log('');
-    console.log('                                           🛰️  DAY ' + day + '  🌌');
-    console.log('                                  [DEEP SPACE RESEARCH STATION ALPHA]');
-    console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('  ═══════════════════════════════════════════════════════════════════════════════════════════════════════');
+    console.log('');
+    console.log('      ██████╗ ███████╗███████╗██████╗     ██████╗  █████╗ ███╗   ██╗ ██████╗ ███████╗');
+    console.log('      ██╔══██╗██╔════╝██╔════╝██╔══██╗    ██╔══██╗██╔══██╗████╗  ██║██╔════╝ ██╔════╝');
+    console.log('      ██║  ██║█████╗  █████╗  ██████╔╝    ██████╔╝███████║██╔██╗ ██║██║  ███╗█████╗');
+    console.log('      ██║  ██║██╔══╝  ██╔══╝  ██╔═══╝     ██╔══██╗██╔══██║██║╚██╗██║██║   ██║██╔══╝');
+    console.log('      ██████╔╝███████╗███████╗██║         ██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗');
+    console.log('      ╚═════╝ ╚══════╝╚══════╝╚═╝         ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝');
+    console.log('');
+    console.log('                      ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗');
+    console.log('                      ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║');
+    console.log('                      ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║');
+    console.log('                      ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║');
+    console.log('                      ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗');
+    console.log('                      ╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝');
+    console.log('');
+    console.log('                                       🛰️  DAY ' + String(day).padStart(3, ' ') + '  🌌');
+    console.log('                              [DEEP SPACE RESEARCH STATION ALPHA]');
+    console.log('');
+    console.log('  ═══════════════════════════════════════════════════════════════════════════════════════════════════════');
     console.log(`🍽️ Food: ${resourceManager.resources.food}/200 ${formatChange(netChanges.food.net)}`);
     console.log(`😰 Morale: ${resourceManager.resources.morale}/200 ${formatChange(netChanges.morale.net)}`);
     console.log(`⚡ Energy: ${resourceManager.resources.energy}/200 ${formatChange(netChanges.energy.net)}`);
     console.log(`👥 Survivors: ${resourceManager.crewMembers}`);
+    console.log('');
     
     const cosmicInfluence = eventManager.getCosmicInfluence();
     if (cosmicInfluence > 10) {
@@ -55,6 +60,24 @@ class DisplayManager {
     console.log('Colony Structures:');
     
     const buildings = buildingManager.getAllBuildings();
+    
+    // Display building energy costs
+    const buildingEnergyCost = buildings.hydroponicsFarm * 2 + 
+                              buildings.recreationCenter * 1 + 
+                              buildings.communicationArray * 3 + 
+                              buildings.researchLab * 4 + 
+                              buildings.shieldGenerator * 5;
+    
+    if (buildingEnergyCost > 0) {
+      console.log('');
+      console.log('⚡ Building Energy Costs:');
+      if (buildings.hydroponicsFarm > 0) console.log(`  Hydroponic Farms (${buildings.hydroponicsFarm}): -${buildings.hydroponicsFarm * 2} energy/day`);
+      if (buildings.recreationCenter > 0) console.log(`  Recreation Centers (${buildings.recreationCenter}): -${buildings.recreationCenter * 1} energy/day`);
+      if (buildings.communicationArray > 0) console.log(`  Communication Arrays (${buildings.communicationArray}): -${buildings.communicationArray * 3} energy/day`);
+      if (buildings.researchLab > 0) console.log(`  Research Labs (${buildings.researchLab}): -${buildings.researchLab * 4} energy/day`);
+      if (buildings.shieldGenerator > 0) console.log(`  Shield Generators (${buildings.shieldGenerator}): -${buildings.shieldGenerator * 5} energy/day`);
+      console.log(`  Total Building Costs: -${buildingEnergyCost} energy/day`);
+    }
     const production = buildingManager.getTotalBuildingProduction(resourceManager.crewMembers);
     const unlockedBuildings = buildingManager.getUnlockedBuildings();
     
@@ -86,7 +109,7 @@ class DisplayManager {
       
       if (missionStatus.progress.isExpedition) {
         console.log(`🚀 ACTION REQUIRED: Launch the final expedition via "Exploratory expedition"`);
-        console.log(`💰 Cost: 50 food, 120 energy, 60 morale`);
+        console.log(`💰 Cost: 100 food, 120 energy, 60 morale`);
       } else {
         console.log(`Target: Build ${missionStatus.progress.target} ${missionStatus.progress.building.replace(/([A-Z])/g, ' $1').toLowerCase().trim()}`);
       }
@@ -440,9 +463,9 @@ class DisplayManager {
     console.log('🔄 PARTIAL REWARDS: Lost crew may still bring back some resources');
     console.log('🛡️ SAFETY NET: At least one crew member always returns from team expeditions');
     console.log('');
-    console.log('1. 🚀 Small team (1 crew) - Standard risk and reward');
-    console.log('2. 🚀🚀 Medium team (2 crew) - Much better rewards, moderate risk');
-    console.log('3. 🚀🚀🚀 Large team (3 crew) - Excellent rewards, higher risk');
+    console.log('1. 🚀 Solo expedition (1 crew) - 3 food cost, higher individual risk, best efficiency with high morale');
+    console.log('2. 🚀🚀 Small team (2 crew) - 6 food cost, reduced individual risk, balanced approach');
+    console.log('3. 🚀🚀🚀 Large team (3 crew) - 9 food cost, lowest individual risk, better for dangerous conditions');
     console.log('4. 🔙 Return to base');
     console.log('');
     console.log('Enter your choice (1-4):');
