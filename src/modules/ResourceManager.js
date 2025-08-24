@@ -48,17 +48,21 @@ class ResourceManager {
       return { blackout: true };
     }
     
+    // Farms: 50% base + 50% crew-dependent (3 base + 3 crew-scaled)
     const farmEfficiency = Math.min(1.0, this.crewMembers / 5);
-    this.resources.food += Math.floor(buildings.hydroponicsFarm * 6 * farmEfficiency);
+    const farmProduction = buildings.hydroponicsFarm * (3 + Math.floor(3 * farmEfficiency));
+    this.resources.food += farmProduction;
     
+    // Solar: 50% base + 50% crew-dependent (6 base + 6 crew-scaled) 
     const energyEfficiency = Math.min(1.0, this.crewMembers / 5);
-    this.resources.energy += Math.floor(buildings.solarPanels * 12 * energyEfficiency);
+    const solarProduction = buildings.solarPanels * (6 + Math.floor(6 * energyEfficiency));
+    this.resources.energy += solarProduction;
     
-    const moraleEfficiency = Math.min(1.0, this.crewMembers / 5);
-    this.resources.morale += Math.floor(buildings.recreationCenter * 5 * moraleEfficiency);
+    // Recreation: Fixed 5 per building (no crew scaling)
+    this.resources.morale += Math.floor(buildings.recreationCenter * 5);
     
     // Apply energy costs for buildings (except solar panels)
-    const buildingEnergyCost = buildings.hydroponicsFarm * 2 + 
+    const buildingEnergyCost = buildings.hydroponicsFarm * 1 + 
                               buildings.recreationCenter * 1 + 
                               buildings.communicationArray * 3 + 
                               buildings.researchLab * 4 + 
@@ -102,14 +106,16 @@ class ResourceManager {
     
     const farmEfficiency = Math.min(1.0, this.crewMembers / 5);
     const energyEfficiency = Math.min(1.0, this.crewMembers / 5);
-    const moraleEfficiency = Math.min(1.0, this.crewMembers / 5);
     
-    const foodProduction = Math.floor(buildings.hydroponicsFarm * 6 * farmEfficiency);
-    const energyProduction = Math.floor(buildings.solarPanels * 12 * energyEfficiency);
-    const moraleProduction = Math.floor(buildings.recreationCenter * 5 * moraleEfficiency);
+    // Farms: 50% base + 50% crew-dependent (3 base + 3 crew-scaled)
+    const foodProduction = buildings.hydroponicsFarm * (3 + Math.floor(3 * farmEfficiency));
+    // Solar: 50% base + 50% crew-dependent (6 base + 6 crew-scaled)
+    const energyProduction = buildings.solarPanels * (6 + Math.floor(6 * energyEfficiency));
+    // Recreation: Fixed 5 per building (no crew scaling)
+    const moraleProduction = buildings.recreationCenter * 5;
     
     // Calculate building energy costs
-    const buildingEnergyCost = buildings.hydroponicsFarm * 2 + 
+    const buildingEnergyCost = buildings.hydroponicsFarm * 1 + 
                               buildings.recreationCenter * 1 + 
                               buildings.communicationArray * 3 + 
                               buildings.researchLab * 4 + 

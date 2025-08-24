@@ -71,7 +71,7 @@ class DisplayManager {
     if (buildingEnergyCost > 0) {
       console.log('');
       console.log('⚡ Building Energy Costs:');
-      if (buildings.hydroponicsFarm > 0) console.log(`  Hydroponic Farms (${buildings.hydroponicsFarm}): -${buildings.hydroponicsFarm * 2} energy/day`);
+      if (buildings.hydroponicsFarm > 0) console.log(`  Hydroponic Farms (${buildings.hydroponicsFarm}): -${buildings.hydroponicsFarm * 1} energy/day`);
       if (buildings.recreationCenter > 0) console.log(`  Recreation Centers (${buildings.recreationCenter}): -${buildings.recreationCenter * 1} energy/day`);
       if (buildings.communicationArray > 0) console.log(`  Communication Arrays (${buildings.communicationArray}): -${buildings.communicationArray * 3} energy/day`);
       if (buildings.researchLab > 0) console.log(`  Research Labs (${buildings.researchLab}): -${buildings.researchLab * 4} energy/day`);
@@ -83,13 +83,19 @@ class DisplayManager {
     
     // Only show unlocked buildings
     if (unlockedBuildings.includes('hydroponicsFarm')) {
-      console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${Math.round(buildingManager.getBuildingEfficiency('hydroponicsFarm', resourceManager.crewMembers)*100)}% efficient]`);
+      const farmEfficiency = Math.min(1.0, resourceManager.crewMembers / 5);
+      const baseProduction = buildings.hydroponicsFarm * 3;
+      const crewProduction = buildings.hydroponicsFarm * Math.floor(3 * farmEfficiency);
+      console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${baseProduction} base + ${crewProduction} crew-dependent]`);
     }
     if (unlockedBuildings.includes('solarPanels')) {
-      console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${Math.round(buildingManager.getBuildingEfficiency('solarPanels', resourceManager.crewMembers)*100)}% efficient]`);
+      const energyEfficiency = Math.min(1.0, resourceManager.crewMembers / 5);
+      const baseProduction = buildings.solarPanels * 6;
+      const crewProduction = buildings.solarPanels * Math.floor(6 * energyEfficiency);
+      console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${baseProduction} base + ${crewProduction} crew-dependent]`);
     }
     if (unlockedBuildings.includes('recreationCenter')) {
-      console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [${Math.round(buildingManager.getBuildingEfficiency('recreationCenter', resourceManager.crewMembers)*100)}% efficient]`);
+      console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [Fixed output, no crew scaling]`);
     }
     if (unlockedBuildings.includes('communicationArray')) {
       console.log(`  📡 Communication Arrays: ${buildings.communicationArray}`);
