@@ -218,6 +218,13 @@ class GameController {
     
     this.day++;
     
+    // Gradual cosmic influence increase as time passes on this alien world
+    if (this.gameMode === 'campaign' && Math.random() < 0.15) { // 15% chance per day
+      // Influence increases faster later in the campaign
+      const missionMultiplier = this.campaignManager ? (this.campaignManager.currentMission + 1) : 1;
+      this.eventManager.addCosmicInfluence(missionMultiplier);
+    }
+    
     // Auto-save every day
     this.saveManager.saveGame(this.saveManager.exportGameState(
       this.resourceManager,
@@ -426,7 +433,7 @@ class GameController {
       // Continue with regular expedition if choice was '2'
     }
 
-    this.displayManager.displayExpeditionMenu();
+    this.displayManager.displayExpeditionMenu(this.expeditionManager);
     const choice = await this.getUserInput();
     
     let teamSize = 0;
@@ -712,6 +719,9 @@ class GameController {
   }
 
   async presentFinalChoice(mission) {
+    // Major cosmic influence spike at the final crisis
+    this.eventManager.addCosmicInfluence(25);
+    
     console.clear();
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
     console.log('                                      ⚠️ SYSTEM CRITICAL FAILURE ⚠️');

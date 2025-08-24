@@ -18,7 +18,7 @@ const missions = {
     },
     {
       title: "Emergency Containment Protocol",
-      story: "The situation has deteriorated beyond our worst projections. The crystal formations aren't just energy sources - they're... alive. Dr. Rodriguez calculated the breach probability before she stopped speaking altogether. The patterns in her equations, they're not mathematical anymore. They're something else. Something that whispers. We need to build what the crew has started calling a 'Protective Barrier' - though the blueprints seem to have appeared overnight, written in symbols none of us recognize. 18 days before something breaks through.",
+      story: "The situation has deteriorated beyond our worst projections. The crystal formations aren't just energy sources - they're... alive. Dr. Rodriguez calculated the breach probability before she stopped speaking altogether. The patterns in her equations, they're not mathematical anymore. They're something else. Something that whispers. We need to build what the crew has started calling a 'Protective Barrier' - though the blueprints seem to have appeared overnight, written in symbols none of us recognize. Time is running out before something breaks through.",
       building: 'shieldGenerator',
       amount: 1,
       timeLimit: 18,

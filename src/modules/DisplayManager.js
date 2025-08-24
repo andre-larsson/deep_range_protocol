@@ -436,7 +436,7 @@ class DisplayManager {
     console.log('Press Enter to continue...');
   }
 
-  displayExpeditionMenu() {
+  displayExpeditionMenu(expeditionManager = null) {
     console.clear();
     console.log('═══════════════════════════════════════════════════════════════════════════════════════════════════════════');
     console.log('                                    🗺️ EXPLORATORY EXPEDITION 🗺️');
@@ -463,6 +463,34 @@ class DisplayManager {
     console.log('🔄 PARTIAL REWARDS: Lost crew may still bring back some resources');
     console.log('🛡️ SAFETY NET: At least one crew member always returns from team expeditions');
     console.log('');
+    
+    // Display subtle cosmic risk indicator
+    if (expeditionManager) {
+      const cosmicEncounters = expeditionManager.getCosmicEncounters();
+      const totalExpeditions = expeditionManager.getExpeditionCount();
+      
+      if (totalExpeditions > 0 || cosmicEncounters > 0) {
+        let riskLevel = 'Standard';
+        let riskIcon = '🟢';
+        
+        if (cosmicEncounters >= 3 || totalExpeditions >= 5) {
+          riskLevel = 'Elevated';
+          riskIcon = '🟡';
+        }
+        if (cosmicEncounters >= 5 || totalExpeditions >= 8) {
+          riskLevel = 'High';
+          riskIcon = '🟠';
+        }
+        if (cosmicEncounters >= 7 || totalExpeditions >= 12) {
+          riskLevel = 'Critical';
+          riskIcon = '🔴';
+        }
+        
+        console.log(`${riskIcon} Subsurface Activity Level: ${riskLevel} (${cosmicEncounters} anomalous readings, ${totalExpeditions} expeditions conducted)`);
+        console.log('');
+      }
+    }
+    
     console.log('1. 🚀 Solo expedition (1 crew) - 3 food cost, higher individual risk, best efficiency with high morale');
     console.log('2. 🚀🚀 Small team (2 crew) - 6 food cost, reduced individual risk, balanced approach');
     console.log('3. 🚀🚀🚀 Large team (3 crew) - 9 food cost, lowest individual risk, better for dangerous conditions');
