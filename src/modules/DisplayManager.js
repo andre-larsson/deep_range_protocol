@@ -50,11 +50,10 @@ class DisplayManager {
     console.log('');
     
     const cosmicInfluence = eventManager.getCosmicInfluence();
-    if (cosmicInfluence > 10) {
-      const influenceLevel = Math.min(5, Math.floor(cosmicInfluence / 10));
-      const indicators = ['🌑', '🌒', '🌓', '🌔', '🌕'];
-      console.log(`${indicators[influenceLevel-1]} Anomalous Activity: ${'█'.repeat(influenceLevel)}${'░'.repeat(5-influenceLevel)}`);
-    }
+    const influenceLevel = cosmicInfluence <= 10 ? 0 : Math.min(5, Math.floor(cosmicInfluence / 10));
+    const indicators = ['🟢', '🌑', '🌒', '🌓', '🌔', '🌕'];
+    const activityLevel = influenceLevel === 0 ? 'Standard' : `${'█'.repeat(influenceLevel)}${'░'.repeat(5-influenceLevel)}`;
+    console.log(`${indicators[influenceLevel]} Anomalous Activity: ${activityLevel}`);
     
     console.log('───────────────────────────────────────');
     console.log('Colony Structures:');
@@ -84,18 +83,16 @@ class DisplayManager {
     // Only show unlocked buildings
     if (unlockedBuildings.includes('hydroponicsFarm')) {
       const farmEfficiency = Math.min(1.0, resourceManager.crewMembers / 5);
-      const baseProduction = buildings.hydroponicsFarm * 3;
-      const crewProduction = buildings.hydroponicsFarm * Math.floor(3 * farmEfficiency);
-      console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${baseProduction} base + ${crewProduction} crew-dependent]`);
+      const efficiencyPercent = Math.round((50 + 50 * farmEfficiency)); // 50% base + up to 50% from crew
+      console.log(`  🌱 Hydroponic Farms: ${buildings.hydroponicsFarm} (+${production.food} food/day) [${efficiencyPercent}% efficient]`);
     }
     if (unlockedBuildings.includes('solarPanels')) {
       const energyEfficiency = Math.min(1.0, resourceManager.crewMembers / 5);
-      const baseProduction = buildings.solarPanels * 6;
-      const crewProduction = buildings.solarPanels * Math.floor(6 * energyEfficiency);
-      console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${baseProduction} base + ${crewProduction} crew-dependent]`);
+      const efficiencyPercent = Math.round((50 + 50 * energyEfficiency)); // 50% base + up to 50% from crew
+      console.log(`  ☀️ Solar Panels: ${buildings.solarPanels} (+${production.energy} energy/day) [${efficiencyPercent}% efficient]`);
     }
     if (unlockedBuildings.includes('recreationCenter')) {
-      console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [Fixed output, no crew scaling]`);
+      console.log(`  🏠 Recreation Centers: ${buildings.recreationCenter} (+${production.morale} morale/day) [100% efficient]`);
     }
     if (unlockedBuildings.includes('communicationArray')) {
       console.log(`  📡 Communication Arrays: ${buildings.communicationArray}`);
@@ -169,7 +166,7 @@ class DisplayManager {
     // Highlight expedition option for final mission
     const isFinalMission = campaignManager && campaignManager.currentMission === 3 && campaignManager.missionActive;
     if (isFinalMission) {
-      console.log('2. 🚀⭐ FINAL EXPEDITION READY ⭐🚀 (Complete the mission here!)');
+      console.log('2. 🚀⭐ FINAL EXPEDITION READY ⭐🚀');
     } else {
       console.log('2. 🗺️ Exploratory expedition');
     }
@@ -475,26 +472,24 @@ class DisplayManager {
       const cosmicEncounters = expeditionManager.getCosmicEncounters();
       const totalExpeditions = expeditionManager.getExpeditionCount();
       
-      if (totalExpeditions > 0 || cosmicEncounters > 0) {
-        let riskLevel = 'Standard';
-        let riskIcon = '🟢';
-        
-        if (cosmicEncounters >= 3 || totalExpeditions >= 5) {
-          riskLevel = 'Elevated';
-          riskIcon = '🟡';
-        }
-        if (cosmicEncounters >= 5 || totalExpeditions >= 8) {
-          riskLevel = 'High';
-          riskIcon = '🟠';
-        }
-        if (cosmicEncounters >= 7 || totalExpeditions >= 12) {
-          riskLevel = 'Critical';
-          riskIcon = '🔴';
-        }
-        
-        console.log(`${riskIcon} Subsurface Activity Level: ${riskLevel} (${cosmicEncounters} anomalous readings, ${totalExpeditions} expeditions conducted)`);
-        console.log('');
+      let riskLevel = 'Standard';
+      let riskIcon = '🟢';
+      
+      if (cosmicEncounters >= 3 || totalExpeditions >= 5) {
+        riskLevel = 'Elevated';
+        riskIcon = '🟡';
       }
+      if (cosmicEncounters >= 5 || totalExpeditions >= 8) {
+        riskLevel = 'High';
+        riskIcon = '🟠';
+      }
+      if (cosmicEncounters >= 7 || totalExpeditions >= 12) {
+        riskLevel = 'Critical';
+        riskIcon = '🔴';
+      }
+      
+      console.log(`${riskIcon} Subsurface Activity Level: ${riskLevel} (${cosmicEncounters} anomalous readings, ${totalExpeditions} expeditions conducted)`);
+      console.log('');
     }
     
     console.log('1. 🚀 Solo expedition (1 crew) - 3 food cost, higher individual risk, best efficiency with high morale');
